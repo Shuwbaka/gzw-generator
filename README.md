@@ -1,6 +1,6 @@
 # GZW Tactical Ops Planner
 
-(Version Alpha 0.18)
+(Version Alpha 0.18)- - 
 Générateur de briefings et de missions pour **Gray Zone Warfare** (Lamang).  
 Application 100 % front (HTML + CSS + JS) qui tourne directement dans le navigateur et stocke la configuration en local (localStorage).
 
