@@ -1,0 +1,103 @@
+[
+  {
+    "id": "FIRST_RECON",
+    "nom": "First Recon",
+    "donneur": "Handshake",
+    "poi_principal": "NAM_THAVEN",
+    "type": "Reconnaissance",
+    "resume": "Première reconnaissance autour de Nam Thaven pour repérer menaces et points d'intérêt.",
+    "objectifs": [
+      "Atteindre le secteur de Nam Thaven.",
+      "Observer la station-service et noter toute présence ennemie.",
+      "Inspecter un petit commerce ou une supérette dans la ville.",
+      "Revenir au camp de base et rendre compte à Handshake."
+    ]
+  },
+  {
+    "id": "CACHE_RETRIEVAL",
+    "nom": "Cache Retrieval",
+    "donneur": "Handshake",
+    "poi_principal": "TIGER_BAY",
+    "type": "Récupération d'objet",
+    "resume": "Récupérer une cache d'équipement abandonnée dans un bâtiment à Tiger Bay.",
+    "objectifs": [
+      "Localiser le bâtiment contenant la cache à Tiger Bay.",
+      "Récupérer l'équipement laissé sur place.",
+      "Quitter Tiger Bay sans perdre la cache.",
+      "Rentrer vivant au camp et livrer la cache à Handshake."
+    ]
+  },
+  {
+    "id": "LITTLE_BIRD_DOWN",
+    "nom": "Little Bird Down",
+    "donneur": "Handshake",
+    "poi_principal": "NAM_THAVEN",
+    "type": "Recherche et récupération",
+    "resume": "Rejoindre un hélicoptère abattu près de Nam Thaven et sécuriser ce qui peut l'être.",
+    "objectifs": [
+      "Atteindre la zone du crash à proximité de Nam Thaven.",
+      "Inspecter la carcasse de l'hélicoptère.",
+      "Récupérer tout équipement utilisable autour du site.",
+      "Atteindre le batiment à l'ouest.",
+      "Retrouver le corps du pilote.",
+      "Rentrer à la base avec les informations et objets récupérés."
+    ]
+  },
+  {
+    "id": "THE_REBEL_PATH",
+    "nom": "The Rebel Path",
+    "donneur": "Gunny",
+    "poi_principal": "BAN_PA",
+    "type": "Reconnaissance / Localisation",
+    "resume": "Localiser plusieurs avant-postes cachés de la LLA autour de la carte.",
+    "objectifs": [
+      "Localiser un avant-poste de la LLA au nord-est de Ban Pa.",
+      "Identifier un avant-poste au nord-ouest de Tiger Bay.",
+      "Repérer un avant-poste au nord-ouest de YBL-1.",
+      "Trouver un avant-poste à l'ouest de Midnight Sapphire et rentrer vivant."
+    ]
+  },
+  {
+    "id": "MEDS_WANTED",
+    "nom": "Meds Wanted",
+    "donneur": "Lab Rat",
+    "poi_principal": "NAM_THAVEN",
+    "type": "Récupération d'objet",
+    "resume": "Récupérer des fournitures médicales stockées dans une zone en hauteur.",
+    "objectifs": [
+      "Atteindre la structure où les caisses médicales sont supposées être entreposées.",
+      "Localiser un container de fournitures et le sécuriser.",
+      "Transporter les fournitures hors de la zone sans les perdre.",
+      "Remettre les caisses de matériel médical à Lab Rat au camp."
+    ]
+  },
+  {
+    "id": "NATIVE_NEGOTIATION",
+    "nom": "Native Negotiation",
+    "donneur": "Artisan",
+    "poi_principal": "BAN_PA",
+    "type": "Interaction / Diplomatie armée",
+    "resume": "Établir un premier contact avec un groupe local en montrant ta capacité à survivre.",
+    "objectifs": [
+      "Atteindre un point de rendez-vous dans les environs de Ban Pa.",
+      "Traverser la zone en limitant les dommages collatéraux.",
+      "Identifier un contact local ou des signes d'activité de la population.",
+      "Revenir vivant pour rendre compte à Artisan."
+    ]
+  },
+  {
+    "id": "SILENT_ECCHO",
+    "nom": "Silent Echo",
+    "donneur": "Shuwbaka",
+    "poi_principal": "PHA_LANG_AIRFIELD",
+    "type": "Reconnaissance et récupération d'intel",
+    "resume": "Une escouade alliée ne répond plus depuis 48 heures. Les forces ennemies occupent l’aérodrome et semblent y mener des activités non identifiées. Une civile, liée au Midnight Sapphire Resort, a également disparu proche de l’aérodrome.",
+    "objectifs": [
+      "Infiltration silencieuse de Rubis      — recherche de l’escouade perdue.",
+      "Progression sur Falcon     — Prise de la zone comme point de replis si nécessaire",
+      "Progression nocturne vers Topaze     — reconnaissance, capture de renseignement,",
+      "Progression vers Diamant     — Investigation logistique — identification de la chaîne de commandement ennemie  — Recherche et récupération d’information sur la zone de transit passagers.",
+      "Exfiltration par le secteur Est de Pha Lang"
+    ]
+  }
+]

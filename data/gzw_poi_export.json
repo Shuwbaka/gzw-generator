@@ -1,0 +1,98 @@
+[
+  {
+    "id": "NAM_THAVEN",
+    "nom": "Nam Thaven",
+    "secteur": "Sud",
+    "type": "Ville"
+  },
+  {
+    "id": "TIGER_BAY",
+    "nom": "Tiger Bay",
+    "secteur": "Est",
+    "type": "Ville portuaire"
+  },
+  {
+    "id": "YBL1",
+    "nom": "YBL-1",
+    "secteur": "Sud Ouest",
+    "type": "Bunker"
+  },
+  {
+    "id": "GROUND_ZERO",
+    "nom": "Ground Zero",
+    "secteur": "Centre",
+    "type": "Zone critique"
+  },
+  {
+    "id": "BAN_PA",
+    "nom": "Ban Pa",
+    "secteur": "Est",
+    "type": "Village"
+  },
+  {
+    "id": "BLUE_LAGOON",
+    "nom": "Blue Lagoon",
+    "secteur": "Sud Est",
+    "type": "Complexe hôtelier"
+  },
+  {
+    "id": "FORT_NARITH",
+    "nom": "Fort Narith",
+    "secteur": "Ouest",
+    "type": "Base militaire"
+  },
+  {
+    "id": "PHA_LANG",
+    "nom": "Pha Lang",
+    "secteur": "Nord Est",
+    "type": "Ville"
+  },
+  {
+    "id": "SAWMILL",
+    "nom": "Sawmill",
+    "secteur": "Ouest",
+    "type": "Zone industrielle"
+  },
+  {
+    "id": "MIDNIGHT_SAPPHIRE",
+    "nom": "Midnight Sapphire",
+    "secteur": "Nord",
+    "type": "Complexe Hôtelier, Village"
+  },
+  {
+    "id": "PHA_LANG_AIRFIELD",
+    "nom": "Pha Lang Airfield",
+    "secteur": "Nord",
+    "type": "Aérodrome"
+  },
+  {
+    "id": "HUNTER_S_PARADISE",
+    "nom": "Hunter's Paradise",
+    "secteur": "Nord",
+    "type": "Hôtel"
+  },
+  {
+    "id": "KIU_VONGSA",
+    "nom": "Kiu Vungsa",
+    "secteur": "Nord Ouest",
+    "type": "Ville"
+  },
+  {
+    "id": "NON_ASSIGNE",
+    "nom": "NON ASSIGNE",
+    "secteur": "A définir",
+    "type": "A définir"
+  },
+  {
+    "id": "SIANG",
+    "nom": "Siang",
+    "secteur": "Centre",
+    "type": "Station Radio"
+  },
+  {
+    "id": "NA_XIANG",
+    "nom": "Na Xiang",
+    "secteur": "Nord",
+    "type": "Fermes"
+  }
+]

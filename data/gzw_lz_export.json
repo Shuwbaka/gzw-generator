@@ -1,0 +1,338 @@
+[
+  {
+    "id": "LZ_ALPHA1",
+    "nom": "Landing Zone Alpha 1",
+    "secteur": "Nord Est",
+    "type": "LZ",
+    "poiId": "PHA_LANG"
+  },
+  {
+    "id": "LZ_ALPHA2",
+    "nom": "Landing Zone Alpha 2",
+    "secteur": "Nord Est",
+    "type": "LZ",
+    "poiId": "PHA_LANG"
+  },
+  {
+    "id": "LZ_ALPHA3",
+    "nom": "Landing Zone Alpha 3",
+    "secteur": "Nord Est",
+    "type": "LZ",
+    "poiId": "PHA_LANG"
+  },
+  {
+    "id": "LZ_BRAVO1",
+    "nom": "Landing Zone Bravo 1",
+    "secteur": "Sud",
+    "type": "LZ",
+    "poiId": "NAM_THAVEN"
+  },
+  {
+    "id": "LZ_BRAVO2",
+    "nom": "Landing Zone Bravo 2",
+    "secteur": "Sud",
+    "type": "LZ",
+    "poiId": "NAM_THAVEN"
+  },
+  {
+    "id": "LZ_BRAVO3",
+    "nom": "Landing Zone Bravo 3",
+    "secteur": "Sud",
+    "type": "LZ",
+    "poiId": "NAM_THAVEN"
+  },
+  {
+    "id": "LZ_CHARLIE1",
+    "nom": "Landing Zone Charlie 1",
+    "secteur": "Nord Ouest",
+    "type": "LZ",
+    "poiId": "KIU_VONGSA"
+  },
+  {
+    "id": "LZ_CHARLIE2",
+    "nom": "Landing Zone Charlie 2",
+    "secteur": "Nord Ouest",
+    "type": "LZ",
+    "poiId": "KIU_VONGSA"
+  },
+  {
+    "id": "LZ_CHARLIE3",
+    "nom": "Landing Zone Charlie 3",
+    "secteur": "Nord Ouest",
+    "type": "LZ",
+    "poiId": "KIU_VONGSA"
+  },
+  {
+    "id": "LZ_DELTA1",
+    "nom": "Landing Zone Delta 1",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "FORT_NARITH"
+  },
+  {
+    "id": "LZ_DELTA2",
+    "nom": "Landing Zone Delta 2",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "FORT_NARITH"
+  },
+  {
+    "id": "LZ_DELTA3",
+    "nom": "Landing Zone Delta 3",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "FORT_NARITH"
+  },
+  {
+    "id": "LZ_DELTA4",
+    "nom": "Landing Zone Delta 4",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "FORT_NARITH"
+  },
+  {
+    "id": "LZ_ECHO1",
+    "nom": "Landing Zone Echo 1",
+    "secteur": "Ouest",
+    "type": "LZ",
+    "poiId": "SAWMILL"
+  },
+  {
+    "id": "LZ_ECHO2",
+    "nom": "Landing Zone Echo 2",
+    "secteur": "Ouest",
+    "type": "LZ",
+    "poiId": "SAWMILL"
+  },
+  {
+    "id": "LZ_ECHO3",
+    "nom": "Landing Zone Echo 3",
+    "secteur": "Ouest",
+    "type": "LZ",
+    "poiId": "SAWMILL"
+  },
+  {
+    "id": "LZ_FOXTROT1",
+    "nom": "Landing Zone Foxtrot 1",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "HUNTER_S_PARADISE"
+  },
+  {
+    "id": "LZ_FOXTROT2",
+    "nom": "Landing Zone Foxtrot 2",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "HUNTER_S_PARADISE"
+  },
+  {
+    "id": "LZ_FOXTROT3",
+    "nom": "Landing Zone Foxtrot 3",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "HUNTER_S_PARADISE"
+  },
+  {
+    "id": "LZ_GOLF1",
+    "nom": "Landing Zone Golf 1",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "PHA_LANG_AIRFIELD"
+  },
+  {
+    "id": "LZ_GOLF2",
+    "nom": "Landing Zone Golf 2",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "PHA_LANG_AIRFIELD"
+  },
+  {
+    "id": "LZ_GOLF3",
+    "nom": "Landing Zone Golf 3",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "PHA_LANG_AIRFIELD"
+  },
+  {
+    "id": "LZ_HOTEL1",
+    "nom": "Landing Zone Hotel 1",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "MIDNIGHT_SAPPHIRE"
+  },
+  {
+    "id": "LZ_HOTEL2",
+    "nom": "Landing Zone Hotel 2",
+    "secteur": "Centre",
+    "type": "LZ",
+    "poiId": "GROUND_ZERO"
+  },
+  {
+    "id": "LZ_HOTEL3",
+    "nom": "Landing Zone Hotel 3",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "MIDNIGHT_SAPPHIRE"
+  },
+  {
+    "id": "LZ_INDIA1",
+    "nom": "Landing Zone India 1",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "BAN_PA"
+  },
+  {
+    "id": "LZ_INDIA2",
+    "nom": "Landing Zone India 2",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "BAN_PA"
+  },
+  {
+    "id": "LZ_INDIA3",
+    "nom": "Landing Zone India 3",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "BAN_PA"
+  },
+  {
+    "id": "LZ_JULIET1",
+    "nom": "Landing Zone Juliet 1",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "TIGER_BAY"
+  },
+  {
+    "id": "LZ_JULIET2",
+    "nom": "Landing Zone Juliet 2",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "TIGER_BAY"
+  },
+  {
+    "id": "LZ_JULIET3",
+    "nom": "Landing Zone Juliet 3",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "TIGER_BAY"
+  },
+  {
+    "id": "LZ_JULIET4",
+    "nom": "Landing Zone Juliet 4",
+    "secteur": "Est",
+    "type": "LZ",
+    "poiId": "TIGER_BAY"
+  },
+  {
+    "id": "LZ_KILO1",
+    "nom": "Landing Zone Kilo 1",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": ""
+  },
+  {
+    "id": "LZ_KILO2",
+    "nom": "Landing Zone Kilo 2",
+    "secteur": "Sud Est",
+    "type": "LZ",
+    "poiId": "BLUE_LAGOON"
+  },
+  {
+    "id": "LZ_KILO3",
+    "nom": "Landing Zone Kilo 3",
+    "secteur": "Sud Est",
+    "type": "LZ",
+    "poiId": "BLUE_LAGOON"
+  },
+  {
+    "id": "LZ_LIMA1",
+    "nom": "Landing Zone Lima 1",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "YBL1"
+  },
+  {
+    "id": "LZ_LIMA2",
+    "nom": "Landing Zone Lima 2",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "YBL1"
+  },
+  {
+    "id": "LZ_LIMA3",
+    "nom": "Landing Zone Lima 3",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "YBL1"
+  },
+  {
+    "id": "LZ_MIKE1",
+    "nom": "Landing Zone Mike 1",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "NON_ASSIGNE"
+  },
+  {
+    "id": "LZ_MIKE2",
+    "nom": "Landing Zone Mike 2",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "NON_ASSIGNE"
+  },
+  {
+    "id": "LZ_MIKE3",
+    "nom": "Landing Zone Mike 3",
+    "secteur": "Sud Ouest",
+    "type": "LZ",
+    "poiId": "NON_ASSIGNE"
+  },
+  {
+    "id": "LZ_NOVEMBER1",
+    "nom": "Landing Zone November 1",
+    "secteur": "Sud Est",
+    "type": "LZ",
+    "poiId": "NON_ASSIGNE"
+  },
+  {
+    "id": "LZ_NOVEMBER2",
+    "nom": "Landing Zone November 2",
+    "secteur": "Sud Est",
+    "type": "LZ",
+    "poiId": "BLUE_LAGOON"
+  },
+  {
+    "id": "LZ_OSCAR1",
+    "nom": "Landing Zone Oscar 1",
+    "secteur": "Centre",
+    "type": "LZ",
+    "poiId": "SIANG"
+  },
+  {
+    "id": "LZ_PAPA1",
+    "nom": "Landing Zone Papa 1",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "NA_XIANG"
+  },
+  {
+    "id": "LZ_PAPA2",
+    "nom": "Landing Zone Papa 2",
+    "secteur": "Nord",
+    "type": "LZ",
+    "poiId": "NA_XIANG"
+  },
+  {
+    "id": "LZ_QUEBEC1",
+    "nom": "Landing Zone Quebec 1",
+    "secteur": "Centre",
+    "type": "LZ",
+    "poiId": "GROUND_ZERO"
+  },
+  {
+    "id": "LZ_QUEBEC2",
+    "nom": "Landing Zone Quebec 2",
+    "secteur": "Centre",
+    "type": "LZ",
+    "poiId": "GROUND_ZERO"
+  }
+]
