@@ -2,8 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>GZW - Tactical Ops Planner (V0.17)</title>
+  <title>GZW - Tactical Ops Planner (V0.18)</title>
   <style>
+    /* (styles identiques à V0.17.5, juste version changée) */
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -794,9 +796,8 @@
       </div>
 
       <p class="hint small" style="margin-top:7px;">
-        Tasks, donneurs, POI et LZ sont stockés dans ton navigateur
-        (localStorage). Tu peux les gérer dans les onglets « Task Database »,
-        « POI / LZ Matrix » et « Import / Export ».[file:227]
+        Les données (Donneurs, Tasks, POI, LZ) sont chargées en priorité depuis les fichiers JSON
+        du serveur. Si absents ou invalides, le générateur bascule sur les valeurs locales / défaut.
       </p>
 
       <h3 style="margin-top:14px;margin-bottom:6px;font-size:0.9rem;">
@@ -860,7 +861,8 @@
           />
           <button id="btn-add-vendor">Ajouter donneur</button>
           <p class="hint small" style="margin-top:4px;">
-            Le donneur sera disponible partout et mémorisé dans ton navigateur.
+            Le donneur sera disponible partout. Si tu utilises des JSON côté serveur,
+            pense à mettre à jour les fichiers pour partager ces changements.
           </p>
         </div>
       </div>
@@ -911,7 +913,7 @@
           <label for="edit-resume">Résumé (1 phrase)</label>
           <textarea
             id="edit-resume"
-            placeholder="Résumé libre de la task (pas de copier/coller exact depuis un site)."
+            placeholder="Résumé libre de la task."
           ></textarea>
         </div>
       </div>
@@ -937,7 +939,7 @@
       <p class="hint small" style="margin-top:7px;">
         Gestion des doublons : si tu ajoutes ou modifies une task avec un
         ID ou un nom déjà utilisé pour le même donneur, tu seras averti
-        avant la sauvegarde.[file:227]
+        avant la sauvegarde.
       </p>
 
       <h3 style="margin-top:14px;margin-bottom:6px;font-size:0.9rem;">
@@ -1066,7 +1068,7 @@
 
       <p class="hint small" style="margin-top:8px;">
         Chaque LZ DOIT être liée à un POI pour être utilisable (mode strict :
-        uniquement LZ du POI de la mission, jamais les autres).[file:227]
+        uniquement LZ du POI de la mission, jamais les autres).
       </p>
     </section>
 
@@ -1079,8 +1081,9 @@
       <div class="panel-separator"></div>
 
       <p class="hint small" style="margin-bottom:10px;">
-        Utilise cet onglet pour sauvegarder ou restaurer tes données
-        (Donneurs, Tasks, POI, LZ) entre navigateurs ou versions du fichier.
+        Cet onglet permet de sauvegarder ou restaurer la configuration locale (par ex. avant de
+        mettre à jour les fichiers JSON côté serveur). Les JSON côté serveur restent la source
+        « officielle » chargée au démarrage.
       </p>
 
       <!-- DONNEURS -->
@@ -1090,7 +1093,7 @@
           Format attendu : tableau de chaînes (ex : ["Handshake","Gunny","Mon PMC"]).
         </p>
         <div class="import-row">
-          <textarea id="json-vendors-input" placeholder="Colle ici du JSON pour importer des donneurs..."></textarea>
+          <textarea id="json-vendors-input" placeholder="Colle ici du JSON pour importer des donneurs dans ta session locale..."></textarea>
           <div class="import-buttons">
             <button id="btn-export-vendors">Exporter donneurs (JSON)</button>
             <button id="btn-import-vendors" class="btn-import">Importer depuis la zone de texte</button>
@@ -1104,10 +1107,10 @@
       <div class="import-box">
         <h3>Tasks</h3>
         <p class="hint small">
-          Format attendu : tableau d'objets de task (ceux déjà utilisés dans ton outil).
+          Format attendu : tableau d'objets de task.
         </p>
         <div class="import-row">
-          <textarea id="json-tasks-input" placeholder="Colle ici du JSON pour importer des tasks..."></textarea>
+          <textarea id="json-tasks-input" placeholder="Colle ici du JSON pour importer des tasks dans ta session locale..."></textarea>
           <div class="import-buttons">
             <button id="btn-export-tasks">Exporter tasks (JSON)</button>
             <button id="btn-import-tasks" class="btn-import">Importer depuis la zone de texte</button>
@@ -1124,7 +1127,7 @@
           Format attendu : tableau d'objets POI (id, nom, secteur, type).
         </p>
         <div class="import-row">
-          <textarea id="json-poi-input" placeholder="Colle ici du JSON pour importer des POI..."></textarea>
+          <textarea id="json-poi-input" placeholder="Colle ici du JSON pour importer des POI dans ta session locale..."></textarea>
           <div class="import-buttons">
             <button id="btn-export-poi">Exporter POI (JSON)</button>
             <button id="btn-import-poi" class="btn-import">Importer depuis la zone de texte</button>
@@ -1141,7 +1144,7 @@
           Format attendu : tableau d'objets LZ (id, nom, secteur, type, poiId).
         </p>
         <div class="import-row">
-          <textarea id="json-lz-input" placeholder="Colle ici du JSON pour importer des LZ..."></textarea>
+          <textarea id="json-lz-input" placeholder="Colle ici du JSON pour importer des LZ dans ta session locale..."></textarea>
           <div class="import-buttons">
             <button id="btn-export-lz">Exporter LZ (JSON)</button>
             <button id="btn-import-lz" class="btn-import">Importer depuis la zone de texte</button>
@@ -1158,14 +1161,14 @@
       <label for="version-gzw">GZW :</label>
       <input type="text" id="version-gzw" value="0.10" />
       <label for="version-gen">Generator :</label>
-      <input type="text" id="version-gen" value="0.17" />
+      <input type="text" id="version-gen" value="0.18" />
       <button id="btn-save-file">
         SAVE HTML
       </button>
     </div>
     <div>
       <span id="version-info" class="hint"
-        >Config stockée localement + exportable via SAVE HTML.</span
+        >Données chargées depuis JSON serveur (si présents) + overrides locaux possibles.</span
       >
     </div>
   </footer>
@@ -1176,6 +1179,12 @@
     const STORAGE_KEY_LZ = "gzw_lz_v3";
     const STORAGE_KEY_META = "gzw_meta_v1";
     const STORAGE_KEY_VENDORS = "gzw_vendors_v1";
+
+    const JSON_BASE_PATH = "data";
+    const JSON_VENDORS_URL = JSON_BASE_PATH + "/vendors.json";
+    const JSON_TASKS_URL = JSON_BASE_PATH + "/tasks.json";
+    const JSON_POI_URL = JSON_BASE_PATH + "/poi.json";
+    const JSON_LZ_URL = JSON_BASE_PATH + "/lz.json";
 
     const DEFAULT_POI = [
       { id: "NAM_THAVEN", nom: "Nam Thaven", secteur: "Nord", type: "Ville" },
@@ -1421,8 +1430,9 @@
 
     let DATA_POI = { poi: [], lz: [] };
     let TASKS = [];
-    let META = { versionGZW: "0.10", versionGen: "0.17" };
+    let META = { versionGZW: "0.10", versionGen: "0.18" };
     let VENDORS = [];
+    let dernierContexte = null;
 
     function loadFromStorage(key, def) {
       try {
@@ -1441,7 +1451,7 @@
       } catch {}
     }
 
-    function loadVendors() {
+    function loadVendorsLocal() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY_VENDORS);
         if (!raw) {
@@ -1464,11 +1474,57 @@
       } catch {}
     }
 
-    loadVendors();
     DATA_POI.poi = loadFromStorage(STORAGE_KEY_POI, DEFAULT_POI);
     DATA_POI.lz = loadFromStorage(STORAGE_KEY_LZ, DEFAULT_LZ);
     TASKS = loadFromStorage(STORAGE_KEY_TASKS, BASE_TASKS);
     META = loadFromStorage(STORAGE_KEY_META, META);
+    loadVendorsLocal();
+
+    async function tryFetchJson(url) {
+      try {
+        const resp = await fetch(url, { cache: "no-store" });
+        if (!resp.ok) return null;
+        return await resp.json();
+      } catch {
+        return null;
+      }
+    }
+
+    async function initialLoad() {
+      const [vendorsJson, tasksJson, poiJson, lzJson] = await Promise.all([
+        tryFetchJson(JSON_VENDORS_URL),
+        tryFetchJson(JSON_TASKS_URL),
+        tryFetchJson(JSON_POI_URL),
+        tryFetchJson(JSON_LZ_URL),
+      ]);
+
+      if (Array.isArray(vendorsJson) && vendorsJson.length > 0) {
+        VENDORS = vendorsJson
+          .map((v) => String(v).trim())
+          .filter((v) => v.length > 0);
+      }
+
+      if (Array.isArray(tasksJson) && tasksJson.length > 0) {
+        TASKS = tasksJson;
+      }
+
+      if (Array.isArray(poiJson) && poiJson.length > 0) {
+        DATA_POI.poi = poiJson;
+      }
+
+      if (Array.isArray(lzJson) && lzJson.length > 0) {
+        DATA_POI.lz = lzJson;
+      }
+
+      refreshVendorSelects();
+      refreshPoiSelects();
+      refreshPoiLzEditorLists();
+      majSelectTasksGenerator();
+      majSelectTasksEditor();
+
+      inputVersionGZW.value = META.versionGZW || "0.10";
+      inputVersionGen.value = META.versionGen || "0.18";
+    }
 
     function randArray(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
@@ -1810,7 +1866,7 @@
         ...newTask.objectifs.map((o, i) => `  ${i + 1}. ${o}`),
       ].join("\n");
       document.getElementById("task-preview").textContent = preview;
-      alert("Task ajoutée et sauvegardée.");
+      alert("Task ajoutée et sauvegardée en localStorage (pense à mettre à jour ton JSON serveur si besoin).");
     });
 
     document
@@ -1861,7 +1917,7 @@
           ...edited.objectifs.map((o, i) => `  ${i + 1}. ${o}`),
         ].join("\n");
         document.getElementById("task-preview").textContent = preview;
-        alert("Task modifiée et sauvegardée.");
+        alert("Task modifiée et sauvegardée en localStorage (pense à mettre à jour ton JSON serveur si besoin).");
       });
 
     document
@@ -1880,7 +1936,7 @@
         }
         if (
           !confirm(
-            `Supprimer définitivement la task [${t.id}] ${t.nom} ?`
+            `Supprimer définitivement la task [${t.id}] ${t.nom} ? (localStorage)`
           )
         )
           return;
@@ -1890,7 +1946,7 @@
         majSelectTasksGenerator();
         majSelectTasksEditor();
         viderFormTask();
-        alert("Task supprimée.");
+        alert("Task supprimée (localStorage). Pense à mettre à jour ton JSON côté serveur si nécessaire.");
       });
 
     document
@@ -1912,7 +1968,7 @@
         majSelectTasksGenerator();
         majSelectTasksEditor();
         input.value = "";
-        alert("Donneur ajouté. Tu peux maintenant l'utiliser dans les tasks.");
+        alert("Donneur ajouté (localStorage). Mets à jour vendors.json sur le serveur si tu veux le partager.");
       });
 
     document
@@ -1959,7 +2015,7 @@
         saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
         refreshPoiSelects();
         refreshPoiLzEditorLists();
-        alert("POI ajouté / mis à jour.");
+        alert("POI ajouté / mis à jour (localStorage). Mets à jour poi.json sur le serveur si tu veux partager ces changements.");
       });
 
     document
@@ -1975,12 +2031,12 @@
           alert("POI introuvable.");
           return;
         }
-        if (!confirm(`Supprimer le POI [${p.id}] ${p.nom} ?`)) return;
+        if (!confirm(`Supprimer le POI [${p.id}] ${p.nom} ? (localStorage)`)) return;
         DATA_POI.poi = DATA_POI.poi.filter((x) => x.id !== id);
         saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
         refreshPoiSelects();
         refreshPoiLzEditorLists();
-        alert("POI supprimé.");
+        alert("POI supprimé (localStorage). Mets à jour poi.json sur le serveur si nécessaire.");
       });
 
     document
@@ -2035,7 +2091,7 @@
         }
         saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
         refreshPoiLzEditorLists();
-        alert("LZ ajoutée / mise à jour.");
+        alert("LZ ajoutée / mise à jour (localStorage). Mets à jour lz.json sur le serveur si besoin.");
       });
 
     document
@@ -2051,11 +2107,11 @@
           alert("LZ introuvable.");
           return;
         }
-        if (!confirm(`Supprimer la LZ [${l.id}] ${l.nom} ?`)) return;
+        if (!confirm(`Supprimer la LZ [${l.id}] ${l.nom} ? (localStorage)`)) return;
         DATA_POI.lz = DATA_POI.lz.filter((x) => x.id !== id);
         saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
         refreshPoiLzEditorLists();
-        alert("LZ supprimée.");
+        alert("LZ supprimée (localStorage). Mets à jour lz.json sur le serveur si nécessaire.");
       });
 
     const lzManualContainer = document.getElementById("lz-manual-selects");
@@ -2135,8 +2191,6 @@
       );
       document.getElementById("mission-output").textContent = updated;
     });
-
-    let dernierContexte = null;
 
     function genererMission(contexteForce) {
       const mode = document.getElementById("mode-mission").value;
@@ -2423,7 +2477,7 @@
     const inputVersionGZW = document.getElementById("version-gzw");
     const inputVersionGen = document.getElementById("version-gen");
     inputVersionGZW.value = META.versionGZW || "0.10";
-    inputVersionGen.value = META.versionGen || "0.17";
+    inputVersionGen.value = META.versionGen || "0.18";
 
     function saveMeta() {
       META.versionGZW = inputVersionGZW.value.trim();
@@ -2468,30 +2522,6 @@
         downloadToFile(html, nomFichier, "text/html");
       });
 
-    refreshVendorSelects();
-    refreshPoiSelects();
-    refreshPoiLzEditorLists();
-    majSelectTasksGenerator();
-    majSelectTasksEditor();
-
-    (function animateRadar() {
-      const sweep = document.getElementById("radar-sweep");
-      if (!sweep) return;
-      let angle = 0;
-      setInterval(() => {
-        angle = (angle + 3) % 360;
-        const rad = (angle * Math.PI) / 180;
-        const cx = 50;
-        const cy = 50;
-        const r = 47;
-        const x2 = cx + r * Math.sin(rad);
-        const y2 = cy - r * Math.cos(rad);
-        sweep.setAttribute("x2", x2.toString());
-        sweep.setAttribute("y2", y2.toString());
-      }, 40);
-    })();
-
-    // EXPORT / IMPORT HELPERS
     function exportJson(obj, filename) {
       const dataStr = JSON.stringify(obj, null, 2);
       downloadToFile(dataStr, filename, "application/json");
@@ -2530,7 +2560,6 @@
       reader.readAsText(file);
     }
 
-    // EXPORT / IMPORT VENDORS
     document
       .getElementById("btn-export-vendors")
       .addEventListener("click", () => {
@@ -2556,7 +2585,7 @@
           refreshVendorSelects();
           majSelectTasksGenerator();
           majSelectTasksEditor();
-          alert("Donneurs importés et appliqués.");
+          alert("Donneurs importés (localStorage). Mets à jour vendors.json si tu veux les partager.");
         });
       });
 
@@ -2579,11 +2608,10 @@
           refreshVendorSelects();
           majSelectTasksGenerator();
           majSelectTasksEditor();
-          alert("Donneurs importés depuis le fichier.");
+          alert("Donneurs importés depuis le fichier (localStorage). Mets à jour vendors.json sur le serveur si besoin.");
         });
       });
 
-    // EXPORT / IMPORT TASKS
     document
       .getElementById("btn-export-tasks")
       .addEventListener("click", () => {
@@ -2602,7 +2630,7 @@
           saveToStorage(STORAGE_KEY_TASKS, TASKS);
           majSelectTasksGenerator();
           majSelectTasksEditor();
-          alert("Tasks importées et appliquées.");
+          alert("Tasks importées (localStorage). Mets à jour tasks.json sur le serveur si tu veux partager cette base.");
         });
       });
 
@@ -2618,11 +2646,10 @@
           saveToStorage(STORAGE_KEY_TASKS, TASKS);
           majSelectTasksGenerator();
           majSelectTasksEditor();
-          alert("Tasks importées depuis le fichier.");
+          alert("Tasks importées depuis le fichier (localStorage). Mets à jour tasks.json sur le serveur si besoin.");
         });
       });
 
-    // EXPORT / IMPORT POI
     document
       .getElementById("btn-export-poi")
       .addEventListener("click", () => {
@@ -2641,7 +2668,7 @@
           saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
           refreshPoiSelects();
           refreshPoiLzEditorLists();
-          alert("POI importés et appliqués.");
+          alert("POI importés (localStorage). Mets à jour poi.json sur le serveur si tu veux partager cette base.");
         });
       });
 
@@ -2657,11 +2684,10 @@
           saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
           refreshPoiSelects();
           refreshPoiLzEditorLists();
-          alert("POI importés depuis le fichier.");
+          alert("POI importés depuis le fichier (localStorage). Mets à jour poi.json sur le serveur si besoin.");
         });
       });
 
-    // EXPORT / IMPORT LZ
     document
       .getElementById("btn-export-lz")
       .addEventListener("click", () => {
@@ -2679,7 +2705,7 @@
           DATA_POI.lz = data;
           saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
           refreshPoiLzEditorLists();
-          alert("LZ importées et appliquées.");
+          alert("LZ importées (localStorage). Mets à jour lz.json sur le serveur si tu veux partager cette base.");
         });
       });
 
@@ -2694,9 +2720,28 @@
           DATA_POI.lz = data;
           saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
           refreshPoiLzEditorLists();
-          alert("LZ importées depuis le fichier.");
+          alert("LZ importées depuis le fichier (localStorage). Mets à jour lz.json sur le serveur si besoin.");
         });
       });
+
+    (function animateRadar() {
+      const sweep = document.getElementById("radar-sweep");
+      if (!sweep) return;
+      let angle = 0;
+      setInterval(() => {
+        angle = (angle + 3) % 360;
+        const rad = (angle * Math.PI) / 180;
+        const cx = 50;
+        const cy = 50;
+        const r = 47;
+        const x2 = cx + r * Math.sin(rad);
+        const y2 = cy - r * Math.cos(rad);
+        sweep.setAttribute("x2", x2.toString());
+        sweep.setAttribute("y2", y2.toString());
+      }, 40);
+    })();
+
+    initialLoad();
   </script>
 </body>
 </html>
