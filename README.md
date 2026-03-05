@@ -70,6 +70,43 @@ Pratique pour :
 - JavaScript vanilla
 - Stockage local : `localStorage`
 
+## Routine de mise à jour
+
+1. Préparer les données dans le générateur
+Ajoute / modifie :
+- Donneurs (onglet Task Database),
+- Tasks (Task Database),
+- POI,
+- LZ.
+Quand tout est comme tu veux, va dans l’onglet Import / Export.
+
+2. Exporter les 4 fichiers JSON
+Dans Import / Export, fais dans cet ordre :
+- Donneurs
+  Clique sur Exporter donneurs (JSON) → un fichier comme gzw_vendors_export-xxx.json est téléchargé.
+- Tasks
+  Clique sur Exporter tasks (JSON) → un fichier gzw_tasks_export-xxx.json.
+- POI
+  Clique sur Exporter POI (JSON) → un fichier gzw_poi_export-xxx.json.
+- LZ
+  Clique sur Exporter LZ (JSON) → un fichier gzw_lz_export-xxx.json.
+Tu as maintenant les 4 fichiers à jour sur ton PC.
+
+3. Mettre à jour le dossier data sur GitHub
+Va sur GitHub → repo gzw-generator.
+Clique sur le dossier data.
+Clique sur Add file → Upload files.
+Glisse/dépose les 4 nouveaux fichiers exportés (ou utilise « Choose your files »).
+Laisse GitHub te proposer de remplacer les anciens fichiers (c’est normal).
+En bas de la page, mets un petit message de commit (ex : Update data JSON) et clique sur Commit changes.
+
+4. Vérifier le résultat
+Attends 30–60 secondes.
+Recharge ton site GitHub Pages (Ctrl+F5 pour forcer le rafraîchissement).
+Vérifie :
+que les donneurs / tasks / POI / LZ affichés correspondent bien à ce que tu as exporté,
+si tu demandes à un pote d’ouvrir la même URL, il voit la même base.
+
 Aucun framework, aucune dépendance externe.
 
 ## Licence
