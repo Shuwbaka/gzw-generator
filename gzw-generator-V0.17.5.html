@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>GZW - Tactical Ops Planner (V0.17)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-main: #050810;
+      --bg-panel: #0b101b;
+      --bg-panel-alt: #0e1422;
+      --accent: #36ff9f;
+      --accent-soft: #36ff9f22;
+      --accent-strong: #36ff9faa;
+      --accent-secondary: #4db2ff;
+      --accent-task: #4db2ff;
+      --accent-geo: #ffb74d;
+      --accent-import: #ff79c6;
+      --text-main: #e6f3ff;
+      --text-muted: #7e93b5;
+      --border-soft: #202a3a;
+      --border-strong: #36ff9f55;
+      --danger: #ff4d5a;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(
+          rgba(20, 30, 50, 0.4) 1px,
+          transparent 1px
+        ),
+        linear-gradient(90deg, rgba(20, 30, 50, 0.4) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: -2;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        circle at 50% -10%,
+        rgba(54, 255, 159, 0.15),
+        transparent 55%
+      );
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    header {
+      background: linear-gradient(
+        to right,
+        #030509,
+        #07101c 35%,
+        #07101c 65%,
+        #030509
+      );
+      border-bottom: 1px solid var(--border-soft);
+      padding: 16px 32px 10px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-line1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    h1 {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 1.4rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0 18px var(--accent-strong);
+      white-space: nowrap;
+    }
+
+    .header-tag {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-strong);
+      color: var(--accent-secondary);
+      background: linear-gradient(
+        to right,
+        rgba(54, 255, 159, 0.08),
+        rgba(77, 178, 255, 0.08)
+      );
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .header-line2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        var(--accent) 0,
+        #0b101b 60%
+      );
+      box-shadow: 0 0 12px var(--accent-strong);
+    }
+
+    .header-coords {
+      opacity: 0.7;
+    }
+
+    main {
+      max-width: 1260px;
+      margin: 24px auto 80px;
+      padding: 0 18px 40px;
+    }
+
+    .tabs {
+      display: inline-flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      padding: 3px;
+      background: radial-gradient(
+        circle at top left,
+        rgba(54, 255, 159, 0.12),
+        rgba(7, 16, 28, 0.95)
+      );
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .tab-btn {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-family: "Consolas", "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      transition: 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      border-color: rgba(77, 178, 255, 0.7);
+    }
+
+    .tab-btn.active {
+      background: radial-gradient(
+        circle at top,
+        rgba(54, 255, 159, 0.26),
+        rgba(7, 16, 28, 0.95)
+      );
+      border-color: var(--border-strong);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(54, 255, 159, 0.4);
+    }
+
+    .panel {
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      padding: 16px 18px 18px;
+      margin-bottom: 22px;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(54, 255, 159, 0.06);
+      pointer-events: none;
+    }
+
+    #tab-generator {
+      background: radial-gradient(
+          circle at top left,
+          rgba(54, 255, 159, 0.14),
+          rgba(5, 8, 16, 0.98)
+        ),
+        linear-gradient(135deg, var(--bg-panel), var(--bg-panel-alt));
+    }
+    #tab-editor-tasks {
+      background: radial-gradient(
+          circle at top right,
+          rgba(77, 178, 255, 0.16),
+          rgba(5, 8, 16, 0.98)
+        ),
+        linear-gradient(135deg, #07101c, #061224);
+    }
+    #tab-editor-poi-lz {
+      background: radial-gradient(
+          circle at bottom,
+          rgba(255, 183, 77, 0.16),
+          rgba(5, 8, 16, 0.98)
+        ),
+        linear-gradient(135deg, #120c05, #0b101b);
+    }
+    #tab-import-export {
+      background: radial-gradient(
+          circle at center,
+          rgba(255, 121, 198, 0.16),
+          rgba(5, 8, 16, 0.98)
+        ),
+        linear-gradient(135deg, #141024, #0b101b);
+    }
+
+    .panel-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 1rem;
+      font-family: "Consolas", "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-secondary);
+    }
+
+    #tab-editor-tasks h2 {
+      color: var(--accent-task);
+    }
+    #tab-editor-poi-lz h2 {
+      color: var(--accent-geo);
+    }
+    #tab-import-export h2 {
+      color: var(--accent-import);
+    }
+
+    .panel-tag {
+      font-size: 0.7rem;
+      font-family: "Consolas", "Courier New", monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .panel-separator {
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        rgba(54, 255, 159, 0.5),
+        rgba(16, 23, 40, 0.5),
+        rgba(77, 178, 255, 0.5)
+      );
+      margin: 6px 0 10px;
+      opacity: 0.55;
+    }
+
+    label {
+      display: block;
+      margin-top: 9px;
+      margin-bottom: 3px;
+      font-size: 0.78rem;
+      font-family: "Consolas", "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 6px 9px;
+      border-radius: 6px;
+      border: 1px solid rgba(69, 88, 120, 0.9);
+      background-color: #050810;
+      color: #e6f3ff;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.85rem;
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    select:focus,
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--accent-strong);
+      box-shadow: 0 0 0 1px rgba(54, 255, 159, 0.4);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .col {
+      flex: 1 1 220px;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(54, 255, 159, 0.6);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      font-family: "Consolas", "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: radial-gradient(
+        circle at top,
+        rgba(54, 255, 159, 0.25),
+        rgba(7, 16, 28, 1)
+      );
+      color: var(--accent);
+      box-shadow: 0 0 18px rgba(54, 255, 159, 0.3);
+      transition: 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 26px rgba(54, 255, 159, 0.55);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 0 14px rgba(54, 255, 159, 0.3);
+    }
+
+    #btn-copy {
+      border-color: rgba(77, 178, 255, 0.7);
+      color: var(--accent-secondary);
+      background: radial-gradient(
+        circle at top,
+        rgba(77, 178, 255, 0.25),
+        rgba(7, 16, 28, 1)
+      );
+      box-shadow: 0 0 18px rgba(77, 178, 255, 0.3);
+    }
+
+    #btn-copy:hover {
+      box-shadow: 0 0 26px rgba(77, 178, 255, 0.55);
+    }
+
+    .btn-danger {
+      border-color: rgba(255, 77, 90, 0.9);
+      color: var(--danger);
+      background: radial-gradient(
+        circle at top,
+        rgba(255, 77, 90, 0.25),
+        rgba(7, 16, 28, 1)
+      );
+      box-shadow: 0 0 18px rgba(255, 77, 90, 0.25);
+    }
+
+    .btn-danger:hover {
+      box-shadow: 0 0 26px rgba(255, 77, 90, 0.55);
+    }
+
+    .btn-import {
+      border-color: rgba(255, 121, 198, 0.8);
+      color: var(--accent-import);
+      background: radial-gradient(
+        circle at top,
+        rgba(255, 121, 198, 0.25),
+        rgba(7, 16, 28, 1)
+      );
+      box-shadow: 0 0 18px rgba(255, 121, 198, 0.35);
+    }
+
+    #mission-output,
+    #task-preview {
+      white-space: pre-wrap;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.9rem;
+      background: radial-gradient(
+          circle at top left,
+          rgba(54, 255, 159, 0.18),
+          rgba(5, 8, 16, 0.98)
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.4),
+          rgba(0, 0, 0, 0.4) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(54, 255, 159, 0.45);
+      min-height: 160px;
+      color: #eafff4;
+      position: relative;
+      overflow: auto;
+    }
+
+    #mission-output::before,
+    #task-preview::before {
+      content: "TERMINAL//OUTPUT";
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      font-size: 0.65rem;
+      font-family: "Consolas", "Courier New", monospace;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(90, 255, 180, 0.5);
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .small {
+      font-size: 0.75rem;
+    }
+
+    .inline-selects {
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: radial-gradient(
+        circle at left,
+        rgba(54, 255, 159, 0.1),
+        rgba(5, 8, 16, 0.96)
+      );
+      border: 1px dashed rgba(54, 255, 159, 0.45);
+    }
+
+    .inline-selects label {
+      display: inline-block;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .inline-selects select {
+      width: auto;
+      min-width: 180px;
+    }
+
+    .radar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+    .radar-svg-frame {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 1px solid rgba(54, 255, 159, 0.6);
+      box-shadow: 0 0 18px rgba(54, 255, 159, 0.35);
+      overflow: hidden;
+      background: radial-gradient(
+        circle,
+        rgba(6, 14, 24, 1),
+        rgba(2, 5, 10, 1)
+      );
+    }
+    .radar-labels {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        to right,
+        rgba(3, 5, 9, 0.98),
+        rgba(8, 13, 22, 0.98),
+        rgba(3, 5, 9, 0.98)
+      );
+      border-top: 1px solid var(--border-soft);
+      padding: 6px 18px;
+      font-size: 0.74rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      font-family: "Consolas", "Courier New", monospace;
+      color: var(--text-muted);
+      z-index: 9;
+    }
+
+    footer label {
+      display: inline-block;
+      margin: 0 4px 0 0;
+      font-size: 0.74rem;
+    }
+
+    footer input[type="text"] {
+      width: 90px;
+      padding: 3px 6px;
+      font-size: 0.74rem;
+      border-radius: 5px;
+      border: 1px solid rgba(69, 88, 120, 0.9);
+      background: #050810;
+      color: var(--accent);
+    }
+
+    #btn-save-file {
+      margin-left: 10px;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+    }
+
+    .import-box {
+      border-radius: 10px;
+      border: 1px solid rgba(255, 121, 198, 0.4);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      background: radial-gradient(
+        circle at top left,
+        rgba(255, 121, 198, 0.12),
+        rgba(5, 8, 16, 0.98)
+      );
+    }
+
+    .import-box h3 {
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      font-family: "Consolas", "Courier New", monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-import);
+    }
+
+    .import-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .import-row textarea {
+      flex: 1 1 240px;
+      min-height: 80px;
+    }
+
+    .import-row .import-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 170px;
+    }
+
+    .import-row input[type="file"] {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding-inline: 16px;
+      }
+      main {
+        padding-inline: 12px;
+      }
+      .header-line1 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-line1">
+      <h1>GZW // TACTICAL OPS PLANNER</h1>
+      <span class="header-tag">LAMANG AO - BRIEFING CONSOLE</span>
+    </div>
+    <div class="header-line2">
+      <div class="header-status">
+        <span class="status-led"></span>
+        <span>PMC NETWORK LINK : STABLE</span>
+      </div>
+      <div class="header-coords">
+        GRID REF &gt; LAMANG / OPS-CENTER • USER: SQUAD LEAD
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="generator">
+        OPS GENERATOR
+      </button>
+      <button class="tab-btn" data-tab="editor-tasks">
+        TASK DATABASE
+      </button>
+      <button class="tab-btn" data-tab="editor-poi-lz">
+        POI / LZ MATRIX
+      </button>
+      <button class="tab-btn" data-tab="import-export">
+        IMPORT / EXPORT
+      </button>
+    </div>
+
+    <!-- GENERATOR -->
+    <section id="tab-generator" class="panel">
+      <div class="panel-header-line">
+        <h2>Mission Generator</h2>
+        <span class="panel-tag">MODULE 01 // BRIEFING SYNTHESIS</span>
+      </div>
+      <div class="panel-separator"></div>
+
+      <div class="radar-wrapper">
+        <div class="radar-svg-frame">
+          <svg id="mini-radar" viewBox="0 0 100 100">
+            <defs>
+              <radialGradient id="radarGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#36ff9f" stop-opacity="0.45" />
+                <stop offset="70%" stop-color="#36ff9f" stop-opacity="0.1" />
+                <stop offset="100%" stop-color="#36ff9f" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="50" cy="50" r="49" fill="#050810" stroke="#36ff9f66" stroke-width="1" />
+            <circle cx="50" cy="50" r="15" fill="none" stroke="#36ff9f33" stroke-width="0.5" />
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#36ff9f33" stroke-width="0.5" />
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#36ff9f33" stroke-width="0.5" />
+            <line x1="50" y1="5" x2="50" y2="95" stroke="#36ff9f40" stroke-width="0.5" />
+            <line x1="5" y1="50" x2="95" y2="50" stroke="#36ff9f40" stroke-width="0.5" />
+            <circle cx="50" cy="50" r="30" fill="url(#radarGlow)" />
+            <circle class="radar-contact" cx="73" cy="32" r="2" fill="#36ff9f" />
+            <circle class="radar-contact" cx="27" cy="60" r="1.8" fill="#36ff9f" />
+            <circle class="radar-contact" cx="60" cy="75" r="1.5" fill="#36ff9f" />
+            <line id="radar-sweep" x1="50" y1="50" x2="50" y2="3" stroke="#36ff9f" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="radar-labels">
+          <div>PRIMARY AO TRACKING</div>
+          <div style="margin-top:4px;">• POI selection synchronisée avec la matrice POI / LZ</div>
+          <div>• Insertion / Exfil strictement liées au POI</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="mode-mission">Mode</label>
+          <select id="mode-mission">
+            <option value="generique">
+              Mission générique (Recon/Assaut…)
+            </option>
+            <option value="task">Basé sur une task GZW</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="type-mission">Type de mission (si générique)</label>
+          <select id="type-mission">
+            <option value="aleatoire">Aléatoire</option>
+            <option value="Reconnaissance">Reconnaissance</option>
+            <option value="Assaut de POI">Assaut de POI</option>
+            <option value="Élimination HVT">Élimination HVT</option>
+            <option value="Récupération d'objet">
+              Récupération d'objet
+            </option>
+            <option value="Escorte">Escorte</option>
+            <option value="Sabotage">Sabotage</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="vendor-task">Donneur de task</label>
+          <select id="vendor-task"></select>
+        </div>
+        <div class="col">
+          <label for="task-select">Task</label>
+          <select id="task-select">
+            <option value="">(Aléatoire parmi ce donneur)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="poi-select">POI principal</label>
+          <select id="poi-select">
+            <option value="aleatoire">Aléatoire</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="nb-objectifs">Objectifs supplémentaires (RP)</label>
+          <input
+            type="number"
+            id="nb-objectifs"
+            min="0"
+            max="5"
+            value="2"
+          />
+        </div>
+        <div class="col">
+          <label for="heure">Heure</label>
+          <select id="heure">
+            <option value="aleatoire">Aléatoire</option>
+            <option value="Jour">Jour</option>
+            <option value="Nuit">Nuit</option>
+            <option value="Aube">Aube</option>
+            <option value="Crépuscule">Crépuscule</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="nb-joueurs">Nombre de joueurs</label>
+          <input
+            type="number"
+            id="nb-joueurs"
+            min="1"
+            max="8"
+            value="4"
+          />
+        </div>
+        <div class="col">
+          <label for="risque">Niveau de risque (densité IA)</label>
+          <select id="risque">
+            <option value="Faible">Faible</option>
+            <option value="Modéré" selected>Modéré</option>
+            <option value="Élevé">Élevé</option>
+            <option value="Extrême">Extrême</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;">
+        <button id="btn-generate">Générer l'opération</button>
+        <button id="btn-regenerate">
+          Régénérer le briefing (garde les mêmes paramètres)
+        </button>
+        <button id="btn-copy">Copier le briefing</button>
+      </div>
+
+      <p class="hint small" style="margin-top:7px;">
+        Tasks, donneurs, POI et LZ sont stockés dans ton navigateur
+        (localStorage). Tu peux les gérer dans les onglets « Task Database »,
+        « POI / LZ Matrix » et « Import / Export ».[file:227]
+      </p>
+
+      <h3 style="margin-top:14px;margin-bottom:6px;font-size:0.9rem;">
+        Mission Brief // Output
+      </h3>
+      <div id="mission-output">
+        Clique sur « Générer l'opération » pour créer un briefing.
+      </div>
+
+      <div id="lz-manual-selects" class="inline-selects hidden">
+        <label for="lz-in-select">LZ d'insertion :</label>
+        <select id="lz-in-select"></select>
+        <label for="lz-out-select">LZ d'exfiltration :</label>
+        <select id="lz-out-select"></select>
+        <span class="hint small"
+          >Modifier ces menus met à jour les lignes Insertion / Exfiltration
+          dans le briefing. Tu peux ensuite utiliser « Régénérer le
+          briefing ».</span
+        >
+      </div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="tab-editor-tasks" class="panel hidden">
+      <div class="panel-header-line">
+        <h2>Task Database</h2>
+        <span class="panel-tag">MODULE 02 // CONTRACT MANAGER</span>
+      </div>
+      <div class="panel-separator"></div>
+
+      <div class="row">
+        <div class="col">
+          <label for="edit-select-vendor">Filtrer par donneur</label>
+          <select id="edit-select-vendor"></select>
+        </div>
+        <div class="col">
+          <label for="edit-search">Recherche (nom / ID)</label>
+          <input
+            type="text"
+            id="edit-search"
+            placeholder="Tape une partie du nom ou de l'ID"
+          />
+        </div>
+        <div class="col">
+          <label for="edit-select-task">Task à éditer</label>
+          <select id="edit-select-task">
+            <option value="">
+              (Nouvelle task / aucune sélection)
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:4px;">
+        <div class="col">
+          <label for="new-vendor-input">Nouveau donneur</label>
+          <input
+            type="text"
+            id="new-vendor-input"
+            placeholder="Ex : Blackbird PMC"
+          />
+          <button id="btn-add-vendor">Ajouter donneur</button>
+          <p class="hint small" style="margin-top:4px;">
+            Le donneur sera disponible partout et mémorisé dans ton navigateur.
+          </p>
+        </div>
+      </div>
+
+      <hr style="border-color:rgba(32,42,58,0.8);margin:10px 0 12px;" />
+
+      <div class="row">
+        <div class="col">
+          <label for="edit-vendor">Donneur</label>
+          <select id="edit-vendor"></select>
+        </div>
+        <div class="col">
+          <label for="edit-task-name">Nom de la task</label>
+          <input
+            type="text"
+            id="edit-task-name"
+            placeholder="Ex : Riverfront View"
+          />
+        </div>
+        <div class="col">
+          <label for="edit-task-id"
+            >ID interne (optionnel, sinon auto)</label
+          >
+          <input
+            type="text"
+            id="edit-task-id"
+            placeholder="Ex : RIVERFRONT_VIEW"
+          />
+        </div>
+        <div class="col">
+          <label for="edit-poi">POI principal</label>
+          <select id="edit-poi">
+            <option value="">(Laisser vide ou choisir)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:6px;">
+        <div class="col">
+          <label for="edit-type">Type (libre)</label>
+          <input
+            type="text"
+            id="edit-type"
+            placeholder="Ex : Reconnaissance, Récupération d'Intel..."
+          />
+        </div>
+        <div class="col">
+          <label for="edit-resume">Résumé (1 phrase)</label>
+          <textarea
+            id="edit-resume"
+            placeholder="Résumé libre de la task (pas de copier/coller exact depuis un site)."
+          ></textarea>
+        </div>
+      </div>
+
+      <label for="edit-objectifs" style="margin-top:8px;"
+        >Objectifs (1 par ligne)</label
+      >
+      <textarea
+        id="edit-objectifs"
+        placeholder="Écris chaque objectif sur une nouvelle ligne."
+      ></textarea>
+
+      <div style="margin-top:8px;">
+        <button id="btn-add-task">Ajouter comme nouvelle task</button>
+        <button id="btn-save-task">
+          Sauvegarder modifications de la task sélectionnée
+        </button>
+        <button id="btn-delete-task" class="btn-danger">
+          Supprimer la task sélectionnée
+        </button>
+      </div>
+
+      <p class="hint small" style="margin-top:7px;">
+        Gestion des doublons : si tu ajoutes ou modifies une task avec un
+        ID ou un nom déjà utilisé pour le même donneur, tu seras averti
+        avant la sauvegarde.[file:227]
+      </p>
+
+      <h3 style="margin-top:14px;margin-bottom:6px;font-size:0.9rem;">
+        Task Preview // Output
+      </h3>
+      <div id="task-preview">
+        Aucune task ajoutée ou modifiée pour le moment.
+      </div>
+    </section>
+
+    <!-- POI / LZ -->
+    <section id="tab-editor-poi-lz" class="panel hidden">
+      <div class="panel-header-line">
+        <h2>POI / LZ Matrix</h2>
+        <span class="panel-tag">MODULE 03 // AO GEODATA</span>
+      </div>
+      <div class="panel-separator"></div>
+
+      <div class="row">
+        <div class="col">
+          <h3
+            style="font-size:0.85rem;margin-bottom:6px;font-family:'Consolas','Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-secondary);"
+          >
+            POI
+          </h3>
+          <label for="poi-list-select">POI existants</label>
+          <select
+            id="poi-list-select"
+            size="8"
+            style="height: 170px"
+          ></select>
+          <button id="btn-del-poi" class="btn-danger">
+            Supprimer POI sélectionné
+          </button>
+        </div>
+        <div class="col">
+          <h3
+            style="font-size:0.85rem;margin-bottom:6px;font-family:'Consolas','Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-secondary);"
+          >
+            Ajouter / éditer POI
+          </h3>
+          <label for="poi-id-input">ID POI (unique)</label>
+          <input
+            type="text"
+            id="poi-id-input"
+            placeholder="Ex : NAM_THAVEN"
+          />
+          <label for="poi-name-input">Nom</label>
+          <input
+            type="text"
+            id="poi-name-input"
+            placeholder="Ex : Nam Thaven"
+          />
+          <label for="poi-secteur-input">Secteur</label>
+          <input
+            type="text"
+            id="poi-secteur-input"
+            placeholder="Nord, Sud, Ouest, Centre..."
+          />
+          <label for="poi-type-input">Type</label>
+          <input
+            type="text"
+            id="poi-type-input"
+            placeholder="Ville, Bunker, Zone industrielle..."
+          />
+          <button id="btn-add-poi">Ajouter / Mettre à jour ce POI</button>
+        </div>
+        <div class="col">
+          <h3
+            style="font-size:0.85rem;margin-bottom:6px;font-family:'Consolas','Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-secondary);"
+          >
+            LZ
+          </h3>
+          <label for="lz-list-select">LZ existantes</label>
+          <select
+            id="lz-list-select"
+            size="8"
+            style="height: 170px"
+          ></select>
+          <button id="btn-del-lz" class="btn-danger">
+            Supprimer LZ sélectionnée
+          </button>
+          <hr
+            style="border-color:rgba(32,42,58,0.8);margin:10px 0 10px;"
+          />
+          <h3
+            style="font-size:0.85rem;margin-bottom:6px;font-family:'Consolas','Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-secondary);"
+          >
+            Ajouter / éditer LZ
+          </h3>
+          <label for="lz-id-input">ID LZ (unique)</label>
+          <input
+            type="text"
+            id="lz-id-input"
+            placeholder="Ex : LZ_ALPHA2"
+          />
+          <label for="lz-name-input">Nom</label>
+          <input
+            type="text"
+            id="lz-name-input"
+            placeholder="Ex : Landing Zone Alpha 2"
+          />
+          <label for="lz-secteur-input">Secteur</label>
+          <input
+            type="text"
+            id="lz-secteur-input"
+            placeholder="Nord, Sud, Ouest, Centre..."
+          />
+          <label for="lz-type-input">Type</label>
+          <input
+            type="text"
+            id="lz-type-input"
+            placeholder="LZ, Héliport..."
+          />
+          <label for="lz-poi-near-input"
+            >POI proche (lié à cette LZ)</label
+          >
+          <select id="lz-poi-near-input">
+            <option value="">
+              (Aucun / invalide pour le générateur strict)
+            </option>
+          </select>
+          <button id="btn-add-lz">Ajouter / Mettre à jour cette LZ</button>
+        </div>
+      </div>
+
+      <p class="hint small" style="margin-top:8px;">
+        Chaque LZ DOIT être liée à un POI pour être utilisable (mode strict :
+        uniquement LZ du POI de la mission, jamais les autres).[file:227]
+      </p>
+    </section>
+
+    <!-- IMPORT / EXPORT -->
+    <section id="tab-import-export" class="panel hidden">
+      <div class="panel-header-line">
+        <h2>Import / Export</h2>
+        <span class="panel-tag">MODULE 04 // DATA SYNC</span>
+      </div>
+      <div class="panel-separator"></div>
+
+      <p class="hint small" style="margin-bottom:10px;">
+        Utilise cet onglet pour sauvegarder ou restaurer tes données
+        (Donneurs, Tasks, POI, LZ) entre navigateurs ou versions du fichier.
+      </p>
+
+      <!-- DONNEURS -->
+      <div class="import-box">
+        <h3>Donneurs de mission</h3>
+        <p class="hint small">
+          Format attendu : tableau de chaînes (ex : ["Handshake","Gunny","Mon PMC"]).
+        </p>
+        <div class="import-row">
+          <textarea id="json-vendors-input" placeholder="Colle ici du JSON pour importer des donneurs..."></textarea>
+          <div class="import-buttons">
+            <button id="btn-export-vendors">Exporter donneurs (JSON)</button>
+            <button id="btn-import-vendors" class="btn-import">Importer depuis la zone de texte</button>
+            <input type="file" id="file-vendors" accept="application/json" />
+            <button id="btn-import-vendors-file" class="btn-import">Importer depuis un fichier</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TASKS -->
+      <div class="import-box">
+        <h3>Tasks</h3>
+        <p class="hint small">
+          Format attendu : tableau d'objets de task (ceux déjà utilisés dans ton outil).
+        </p>
+        <div class="import-row">
+          <textarea id="json-tasks-input" placeholder="Colle ici du JSON pour importer des tasks..."></textarea>
+          <div class="import-buttons">
+            <button id="btn-export-tasks">Exporter tasks (JSON)</button>
+            <button id="btn-import-tasks" class="btn-import">Importer depuis la zone de texte</button>
+            <input type="file" id="file-tasks" accept="application/json" />
+            <button id="btn-import-tasks-file" class="btn-import">Importer depuis un fichier</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POI -->
+      <div class="import-box">
+        <h3>POI</h3>
+        <p class="hint small">
+          Format attendu : tableau d'objets POI (id, nom, secteur, type).
+        </p>
+        <div class="import-row">
+          <textarea id="json-poi-input" placeholder="Colle ici du JSON pour importer des POI..."></textarea>
+          <div class="import-buttons">
+            <button id="btn-export-poi">Exporter POI (JSON)</button>
+            <button id="btn-import-poi" class="btn-import">Importer depuis la zone de texte</button>
+            <input type="file" id="file-poi" accept="application/json" />
+            <button id="btn-import-poi-file" class="btn-import">Importer depuis un fichier</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LZ -->
+      <div class="import-box">
+        <h3>LZ</h3>
+        <p class="hint small">
+          Format attendu : tableau d'objets LZ (id, nom, secteur, type, poiId).
+        </p>
+        <div class="import-row">
+          <textarea id="json-lz-input" placeholder="Colle ici du JSON pour importer des LZ..."></textarea>
+          <div class="import-buttons">
+            <button id="btn-export-lz">Exporter LZ (JSON)</button>
+            <button id="btn-import-lz" class="btn-import">Importer depuis la zone de texte</button>
+            <input type="file" id="file-lz" accept="application/json" />
+            <button id="btn-import-lz-file" class="btn-import">Importer depuis un fichier</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <label for="version-gzw">GZW :</label>
+      <input type="text" id="version-gzw" value="0.10" />
+      <label for="version-gen">Generator :</label>
+      <input type="text" id="version-gen" value="0.17" />
+      <button id="btn-save-file">
+        SAVE HTML
+      </button>
+    </div>
+    <div>
+      <span id="version-info" class="hint"
+        >Config stockée localement + exportable via SAVE HTML.</span
+      >
+    </div>
+  </footer>
+
+  <script>
+    const STORAGE_KEY_TASKS = "gzw_tasks_v6";
+    const STORAGE_KEY_POI = "gzw_poi_v3";
+    const STORAGE_KEY_LZ = "gzw_lz_v3";
+    const STORAGE_KEY_META = "gzw_meta_v1";
+    const STORAGE_KEY_VENDORS = "gzw_vendors_v1";
+
+    const DEFAULT_POI = [
+      { id: "NAM_THAVEN", nom: "Nam Thaven", secteur: "Nord", type: "Ville" },
+      {
+        id: "TIGER_BAY",
+        nom: "Tiger Bay",
+        secteur: "Sud",
+        type: "Ville portuaire",
+      },
+      { id: "YBL1", nom: "YBL-1", secteur: "Centre", type: "Bunker" },
+      {
+        id: "GROUND_ZERO",
+        nom: "Ground Zero",
+        secteur: "Centre",
+        type: "Zone critique",
+      },
+      { id: "BAN_PA", nom: "Ban Pa", secteur: "Sud", type: "Village" },
+      {
+        id: "BLUE_LAGOON",
+        nom: "Blue Lagoon",
+        secteur: "Sud",
+        type: "Complexe hôtelier",
+      },
+      {
+        id: "FORT_NARITH",
+        nom: "Fort Narith",
+        secteur: "Nord",
+        type: "Base militaire",
+      },
+      { id: "PHA_LANG", nom: "Pha Lang", secteur: "Ouest", type: "Ville" },
+      {
+        id: "SAWMILL",
+        nom: "Sawmill",
+        secteur: "Nord",
+        type: "Zone industrielle",
+      },
+      {
+        id: "MIDNIGHT_SAPPHIRE",
+        nom: "Midnight Sapphire",
+        secteur: "Centre",
+        type: "Ville côtière",
+      },
+    ];
+
+    const DEFAULT_LZ = [
+      {
+        id: "LZ_ALPHA2",
+        nom: "Landing Zone Alpha 2",
+        secteur: "Nord",
+        type: "LZ",
+        poiId: "NAM_THAVEN",
+      },
+      {
+        id: "LZ_TIGER",
+        nom: "Tiger Bay LZ",
+        secteur: "Sud",
+        type: "LZ",
+        poiId: "TIGER_BAY",
+      },
+      {
+        id: "LZ_YBL1",
+        nom: "YBL-1 Ridge LZ",
+        secteur: "Centre",
+        type: "LZ",
+        poiId: "YBL1",
+      },
+      {
+        id: "LZ_ZERO",
+        nom: "Ground Zero LZ",
+        secteur: "Centre",
+        type: "LZ",
+        poiId: "GROUND_ZERO",
+      },
+      {
+        id: "LZ_BANPA",
+        nom: "Ban Pa Heli Pad",
+        secteur: "Sud",
+        type: "LZ",
+        poiId: "BAN_PA",
+      },
+      {
+        id: "LZ_BLUE",
+        nom: "Blue Lagoon LZ",
+        secteur: "Sud",
+        type: "LZ",
+        poiId: "BLUE_LAGOON",
+      },
+      {
+        id: "LZ_FORT",
+        nom: "Fort Narith LZ",
+        secteur: "Nord",
+        type: "LZ",
+        poiId: "FORT_NARITH",
+      },
+      {
+        id: "LZ_PHA",
+        nom: "Pha Lang LZ",
+        secteur: "Ouest",
+        type: "LZ",
+        poiId: "PHA_LANG",
+      },
+      {
+        id: "LZ_SAWMILL",
+        nom: "Sawmill LZ",
+        secteur: "Nord",
+        type: "LZ",
+        poiId: "SAWMILL",
+      },
+      {
+        id: "LZ_MIDN",
+        nom: "Midnight Sapphire LZ",
+        secteur: "Centre",
+        type: "LZ",
+        poiId: "MIDNIGHT_SAPPHIRE",
+      },
+    ];
+
+    const BASE_TASKS = [
+      {
+        id: "FIRST_RECON",
+        nom: "First Recon",
+        donneur: "Handshake",
+        poi_principal: "NAM_THAVEN",
+        type: "Reconnaissance",
+        resume:
+          "Première reconnaissance autour de Nam Thaven pour repérer menaces et points d'intérêt.",
+        objectifs: [
+          "Atteindre le secteur de Nam Thaven.",
+          "Observer la station-service et noter toute présence ennemie.",
+          "Inspecter un petit commerce ou une supérette dans la ville.",
+          "Revenir au camp de base et rendre compte à Handshake.",
+        ],
+      },
+      {
+        id: "CACHE_RETRIEVAL",
+        nom: "Cache Retrieval",
+        donneur: "Handshake",
+        poi_principal: "TIGER_BAY",
+        type: "Récupération d'objet",
+        resume:
+          "Récupérer une cache d'équipement abandonnée dans un bâtiment à Tiger Bay.",
+        objectifs: [
+          "Localiser le bâtiment contenant la cache à Tiger Bay.",
+          "Récupérer l'équipement laissé sur place.",
+          "Quitter Tiger Bay sans perdre la cache.",
+          "Rentrer vivant au camp et livrer la cache à Handshake.",
+        ],
+      },
+      {
+        id: "LITTLE_BIRD_DOWN",
+        nom: "Little Bird Down",
+        donneur: "Handshake",
+        poi_principal: "YBL1",
+        type: "Recherche et récupération",
+        resume:
+          "Rejoindre un hélicoptère abattu près de YBL-1 et sécuriser ce qui peut l'être.",
+        objectifs: [
+          "Atteindre la zone du crash à proximité de YBL-1.",
+          "Inspecter la carcasse de l'hélicoptère.",
+          "Récupérer tout équipement utilisable autour du site.",
+          "Rentrer à la base avec les objets récupérés.",
+        ],
+      },
+      {
+        id: "THE_REBEL_PATH",
+        nom: "The Rebel Path",
+        donneur: "Gunny",
+        poi_principal: "BAN_PA",
+        type: "Reconnaissance / Localisation",
+        resume:
+          "Localiser plusieurs avant-postes cachés de la LLA autour de la carte.",
+        objectifs: [
+          "Localiser un avant-poste de la LLA au nord-est de Ban Pa.",
+          "Identifier un avant-poste au nord-ouest de Tiger Bay.",
+          "Repérer un avant-poste au nord-ouest de YBL-1.",
+          "Trouver un avant-poste à l'ouest de Midnight Sapphire et rentrer vivant.",
+        ],
+      },
+      {
+        id: "MEDS_WANTED",
+        nom: "Meds Wanted",
+        donneur: "Lab Rat",
+        poi_principal: "NAM_THAVEN",
+        type: "Récupération d'objet",
+        resume:
+          "Récupérer des fournitures médicales stockées dans une zone en hauteur.",
+        objectifs: [
+          "Atteindre la structure où les caisses médicales sont supposées être entreposées.",
+          "Localiser un container de fournitures et le sécuriser.",
+          "Transporter les fournitures hors de la zone sans les perdre.",
+          "Remettre les caisses de matériel médical à Lab Rat au camp.",
+        ],
+      },
+      {
+        id: "NATIVE_NEGOTIATION",
+        nom: "Native Negotiation",
+        donneur: "Artisan",
+        poi_principal: "BAN_PA",
+        type: "Interaction / Diplomatie armée",
+        resume:
+          "Établir un premier contact avec un groupe local en montrant ta capacité à survivre.",
+        objectifs: [
+          "Atteindre un point de rendez-vous dans les environs de Ban Pa.",
+          "Traverser la zone en limitant les dommages collatéraux.",
+          "Identifier un contact local ou des signes d'activité de la population.",
+          "Revenir vivant pour rendre compte à Artisan.",
+        ],
+      },
+    ];
+
+    const DEFAULT_VENDORS = ["Handshake", "Gunny", "Lab Rat", "Artisan"];
+
+    const TEMPLATES = {
+      typesMission: [
+        "Reconnaissance",
+        "Assaut de POI",
+        "Élimination HVT",
+        "Récupération d'objet",
+        "Escorte",
+        "Sabotage",
+      ],
+      heures: ["Jour", "Nuit", "Aube", "Crépuscule"],
+      briefingIntro: [
+        "Ici Handshake, j’ai un contrat pour votre équipe.",
+        "Gunny au rapport, j’ai un sale boulot pour vous.",
+        "Votre PMC vient d’être retenue pour une opération délicate.",
+      ],
+      objectifs: [
+        "Reconnaître discrètement le secteur de {POI} et confirmer la présence d'hostiles.",
+        "Fouiller au moins {N} bâtiments marqués à {POI} sans vous faire neutraliser.",
+        "Localiser et éliminer une cible HVT dans la zone de {POI}.",
+        "Récupérer un objet sensible et non identifié à {POI} et l'exfiltrer.",
+        "Escorter un contact civil depuis {POI} jusqu'à une zone sûre.",
+        "Saboter les capacités logistiques ennemies dans le secteur de {POI}.",
+      ],
+      conditionsVictoire: [
+        "Au moins un opérateur doit extraire vivant via {LZ_EXFIL}.",
+        "Ramener l’objet clé en vie à la base.",
+        "Éliminer au moins {N} cibles confirmées dans la zone d'opération.",
+        "Aucun civil ne doit être touché durant l’opération.",
+      ],
+    };
+
+    let DATA_POI = { poi: [], lz: [] };
+    let TASKS = [];
+    let META = { versionGZW: "0.10", versionGen: "0.17" };
+    let VENDORS = [];
+
+    function loadFromStorage(key, def) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return def;
+        const parsed = JSON.parse(raw);
+        return parsed ?? def;
+      } catch {
+        return def;
+      }
+    }
+
+    function saveToStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {}
+    }
+
+    function loadVendors() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_VENDORS);
+        if (!raw) {
+          VENDORS = [...DEFAULT_VENDORS];
+          localStorage.setItem(
+            STORAGE_KEY_VENDORS,
+            JSON.stringify(VENDORS)
+          );
+        } else {
+          VENDORS = JSON.parse(raw) || [...DEFAULT_VENDORS];
+        }
+      } catch {
+        VENDORS = [...DEFAULT_VENDORS];
+      }
+    }
+
+    function saveVendors() {
+      try {
+        localStorage.setItem(STORAGE_KEY_VENDORS, JSON.stringify(VENDORS));
+      } catch {}
+    }
+
+    loadVendors();
+    DATA_POI.poi = loadFromStorage(STORAGE_KEY_POI, DEFAULT_POI);
+    DATA_POI.lz = loadFromStorage(STORAGE_KEY_LZ, DEFAULT_LZ);
+    TASKS = loadFromStorage(STORAGE_KEY_TASKS, BASE_TASKS);
+    META = loadFromStorage(STORAGE_KEY_META, META);
+
+    function randArray(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getPoiById(id) {
+      return (
+        DATA_POI.poi.find((p) => p.id === id) ||
+        randArray(DATA_POI.poi) || { id: "", nom: "Zone inconnue" }
+      );
+    }
+
+    function choisirLZPourPoiStrict(poiId) {
+      const candidates = DATA_POI.lz.filter((l) => l.poiId === poiId);
+      if (!candidates.length) {
+        return {
+          lzIn: {
+            id: "",
+            nom: "Aucune LZ liée à ce POI",
+            secteur: "?",
+            type: "LZ",
+            poiId: poiId,
+          },
+          lzOut: {
+            id: "",
+            nom: "Aucune LZ liée à ce POI",
+            secteur: "?",
+            type: "LZ",
+            poiId: poiId,
+          },
+        };
+      }
+      const lzIn = randArray(candidates);
+      const lzOut = randArray(candidates);
+      return { lzIn, lzOut };
+    }
+
+    function genererObjectif(typeMission, poi, dejaPris) {
+      const templates = TEMPLATES.objectifs;
+      let t = randArray(templates);
+      let tries = 0;
+      while (dejaPris.has(t) && tries < 5) {
+        t = randArray(templates);
+        tries++;
+      }
+      dejaPris.add(t);
+      const n = Math.floor(Math.random() * 3) + 2;
+      return t.replace("{POI}", poi.nom).replace("{N}", n);
+    }
+
+    function refreshVendorSelects() {
+      const vendorTask = document.getElementById("vendor-task");
+      const editSelectVendor = document.getElementById("edit-select-vendor");
+      const editVendor = document.getElementById("edit-vendor");
+
+      const selects = [vendorTask, editSelectVendor, editVendor];
+
+      selects.forEach((sel) => {
+        if (!sel) return;
+        const current = sel.value;
+        sel.innerHTML = "";
+        VENDORS.forEach((v) => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
+        });
+        if (current && VENDORS.includes(current)) {
+          sel.value = current;
+        }
+      });
+    }
+
+    function refreshPoiSelects() {
+      const poiSelectGen = document.getElementById("poi-select");
+      const poiSelectTask = document.getElementById("edit-poi");
+      const lzPoiSelect = document.getElementById("lz-poi-near-input");
+
+      poiSelectGen.innerHTML = "";
+      const optAny = document.createElement("option");
+      optAny.value = "aleatoire";
+      optAny.textContent = "Aléatoire";
+      poiSelectGen.appendChild(optAny);
+      DATA_POI.poi.forEach((p) => {
+        const o = document.createElement("option");
+        o.value = p.id;
+        o.textContent = p.nom;
+        poiSelectGen.appendChild(o);
+      });
+
+      poiSelectTask.innerHTML = "";
+      const optNone = document.createElement("option");
+      optNone.value = "";
+      optNone.textContent = "(Laisser vide ou choisir)";
+      poiSelectTask.appendChild(optNone);
+      DATA_POI.poi.forEach((p) => {
+        const o = document.createElement("option");
+        o.value = p.id;
+        o.textContent = p.nom;
+        poiSelectTask.appendChild(o);
+      });
+
+      lzPoiSelect.innerHTML = "";
+      const optNone2 = document.createElement("option");
+      optNone2.value = "";
+      optNone2.textContent = "(Aucun / invalide pour le générateur strict)";
+      lzPoiSelect.appendChild(optNone2);
+      DATA_POI.poi.forEach((p) => {
+        const o = document.createElement("option");
+        o.value = p.id;
+        o.textContent = p.nom;
+        lzPoiSelect.appendChild(o);
+      });
+    }
+
+    function refreshPoiLzEditorLists() {
+      const poiList = document.getElementById("poi-list-select");
+      const lzList = document.getElementById("lz-list-select");
+      poiList.innerHTML = "";
+      lzList.innerHTML = "";
+
+      DATA_POI.poi.forEach((p) => {
+        const o = document.createElement("option");
+        o.value = p.id;
+        o.textContent = `[${p.id}] ${p.nom} (${p.secteur}, ${p.type})`;
+        poiList.appendChild(o);
+      });
+      DATA_POI.lz.forEach((l) => {
+        const poiNear = l.poiId
+          ? getPoiById(l.poiId).nom
+          : "AUCUN (non utilisable)";
+        const o = document.createElement("option");
+        o.value = l.id;
+        o.textContent = `[${l.id}] ${l.nom} (${l.secteur}, ${l.type}, proche de : ${poiNear})`;
+        lzList.appendChild(o);
+      });
+    }
+
+    function majSelectTasksGenerator() {
+      const vendor = document.getElementById("vendor-task").value;
+      const selectTask = document.getElementById("task-select");
+      selectTask.innerHTML = "";
+
+      const tasksFiltrees = TASKS.filter((t) => t.donneur === vendor);
+      if (tasksFiltrees.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "(Aucune task définie pour ce donneur)";
+        selectTask.appendChild(opt);
+        return;
+      }
+
+      const optDefault = document.createElement("option");
+      optDefault.value = "";
+      optDefault.textContent = "(Aléatoire parmi les tasks de ce donneur)";
+      selectTask.appendChild(optDefault);
+
+      tasksFiltrees.forEach((t) => {
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = t.nom;
+        selectTask.appendChild(opt);
+      });
+    }
+
+    function majSelectTasksEditor() {
+      const vendor = document.getElementById("edit-select-vendor").value;
+      const search = document
+        .getElementById("edit-search")
+        .value.trim()
+        .toLowerCase();
+      const selectTask = document.getElementById("edit-select-task");
+      selectTask.innerHTML = "";
+
+      const optNone = document.createElement("option");
+      optNone.value = "";
+      optNone.textContent = "(Nouvelle task / aucune sélection)";
+      selectTask.appendChild(optNone);
+
+      let tasksFiltrees = TASKS.filter((t) => t.donneur === vendor);
+      if (search) {
+        tasksFiltrees = tasksFiltrees.filter(
+          (t) =>
+            (t.nom && t.nom.toLowerCase().includes(search)) ||
+            (t.id && t.id.toLowerCase().includes(search))
+        );
+      }
+
+      tasksFiltrees.forEach((t) => {
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = t.nom;
+        selectTask.appendChild(opt);
+      });
+    }
+
+    document
+      .getElementById("vendor-task")
+      .addEventListener("change", majSelectTasksGenerator);
+    document
+      .getElementById("edit-select-vendor")
+      .addEventListener("change", () => {
+        majSelectTasksEditor();
+        viderFormTask();
+      });
+    document
+      .getElementById("edit-search")
+      .addEventListener("input", majSelectTasksEditor);
+
+    function viderFormTask() {
+      const vendorFilter = document.getElementById("edit-select-vendor").value;
+      document.getElementById("edit-vendor").value = vendorFilter || (VENDORS[0] || "");
+      document.getElementById("edit-task-name").value = "";
+      document.getElementById("edit-task-id").value = "";
+      document.getElementById("edit-poi").value = "";
+      document.getElementById("edit-type").value = "";
+      document.getElementById("edit-resume").value = "";
+      document.getElementById("edit-objectifs").value = "";
+      document.getElementById("task-preview").textContent =
+        "Aucune task ajoutée ou modifiée pour le moment.";
+    }
+
+    function chargerTaskDansFormulaire() {
+      const selectedId = document.getElementById("edit-select-task").value;
+      if (!selectedId) {
+        viderFormTask();
+        return;
+      }
+      const t = TASKS.find((x) => x.id === selectedId);
+      if (!t) {
+        viderFormTask();
+        return;
+      }
+      document.getElementById("edit-vendor").value =
+        t.donneur || document.getElementById("edit-select-vendor").value;
+      document.getElementById("edit-task-name").value = t.nom || "";
+      document.getElementById("edit-task-id").value = t.id || "";
+      document.getElementById("edit-poi").value = t.poi_principal || "";
+      document.getElementById("edit-type").value = t.type || "";
+      document.getElementById("edit-resume").value = t.resume || "";
+      document.getElementById("edit-objectifs").value = (
+        t.objectifs || []
+      ).join("\n");
+
+      const preview = [
+        "Task chargée pour édition :",
+        `- Donneur : ${t.donneur}`,
+        `- ID : ${t.id}`,
+        `- Nom : ${t.nom}`,
+        `- POI principal : ${t.poi_principal || "non défini"}`,
+        `- Type : ${t.type || "Mission"}`,
+        `- Résumé : ${t.resume || "(aucun)"}`,
+        "- Objectifs :",
+        ...(t.objectifs || []).map((o, i) => `  ${i + 1}. ${o}`),
+      ].join("\n");
+      document.getElementById("task-preview").textContent = preview;
+    }
+    document
+      .getElementById("edit-select-task")
+      .addEventListener("change", chargerTaskDansFormulaire);
+
+    function detecterDoublon(task, ignoreId = null) {
+      const sameVendor = TASKS.filter((t) => t.donneur === task.donneur);
+      return sameVendor.find(
+        (t) =>
+          (t.id === task.id && t.id !== ignoreId) ||
+          (t.nom.toLowerCase() === task.nom.toLowerCase() &&
+            t.id !== ignoreId)
+      );
+    }
+
+    function construireTaskDepuisFormulaire() {
+      const vendor = document.getElementById("edit-vendor").value;
+      const nom = document
+        .getElementById("edit-task-name")
+        .value.trim();
+      const idInput = document.getElementById("edit-task-id").value.trim();
+      const poiId = document.getElementById("edit-poi").value;
+      const type = document.getElementById("edit-type").value.trim();
+      const resume = document.getElementById("edit-resume").value.trim();
+      const objectifsRaw = document
+        .getElementById("edit-objectifs")
+        .value.trim();
+
+      if (!nom || !objectifsRaw) {
+        alert(
+          "Nom de task et objectifs sont obligatoires (au moins une ligne)."
+        );
+        return null;
+      }
+
+      const id =
+        idInput || nom.toUpperCase().replace(/[^A-Z0-9]+/g, "_");
+      const objectifs = objectifsRaw
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+
+      return {
+        id,
+        nom,
+        donneur: vendor,
+        poi_principal: poiId || undefined,
+        type: type || "Mission",
+        resume: resume || "",
+        objectifs,
+      };
+    }
+
+    document.getElementById("btn-add-task").addEventListener("click", () => {
+      const newTask = construireTaskDepuisFormulaire();
+      if (!newTask) return;
+
+      const doublon = detecterDoublon(newTask);
+      if (doublon) {
+        alert(
+          `Attention : une task avec le même ID ou le même nom existe déjà pour ce donneur.\n\n` +
+            `Task existante : [${doublon.id}] ${doublon.nom}\n` +
+            `Task que tu veux ajouter : [${newTask.id}] ${newTask.nom}\n\n` +
+            `Change l'ID ou le nom si tu veux éviter le doublon.`
+        );
+        return;
+      }
+
+      TASKS.push(newTask);
+      saveToStorage(STORAGE_KEY_TASKS, TASKS);
+      majSelectTasksGenerator();
+      majSelectTasksEditor();
+
+      const preview = [
+        "Nouvelle task ajoutée :",
+        `- Donneur : ${newTask.donneur}`,
+        `- ID : ${newTask.id}`,
+        `- Nom : ${newTask.nom}`,
+        `- POI principal : ${newTask.poi_principal || "non défini"}`,
+        `- Type : ${newTask.type}`,
+        `- Résumé : ${newTask.resume || "(aucun)"}`,
+        "- Objectifs :",
+        ...newTask.objectifs.map((o, i) => `  ${i + 1}. ${o}`),
+      ].join("\n");
+      document.getElementById("task-preview").textContent = preview;
+      alert("Task ajoutée et sauvegardée.");
+    });
+
+    document
+      .getElementById("btn-save-task")
+      .addEventListener("click", () => {
+        const selectedId =
+          document.getElementById("edit-select-task").value;
+        if (!selectedId) {
+          alert(
+            "Sélectionne d'abord une task à modifier ou utilise 'Ajouter' pour créer une nouvelle task."
+          );
+          return;
+        }
+        const edited = construireTaskDepuisFormulaire();
+        if (!edited) return;
+
+        const doublon = detecterDoublon(edited, selectedId);
+        if (doublon) {
+          alert(
+            `Attention : une task avec le même ID ou le même nom existe déjà pour ce donneur.\n\n` +
+              `Task existante : [${doublon.id}] ${doublon.nom}\n` +
+              `Task que tu veux modifier : [${edited.id}] ${edited.nom}\n\n` +
+              `Change l'ID ou le nom si tu veux éviter le doublon.`
+          );
+          return;
+        }
+
+        const idx = TASKS.findIndex((t) => t.id === selectedId);
+        if (idx === -1) {
+          alert("Impossible de trouver la task à modifier.");
+          return;
+        }
+        TASKS[idx] = edited;
+        saveToStorage(STORAGE_KEY_TASKS, TASKS);
+        majSelectTasksGenerator();
+        majSelectTasksEditor();
+        document.getElementById("edit-select-task").value = edited.id;
+
+        const preview = [
+          "Task modifiée :",
+          `- Donneur : ${edited.donneur}`,
+          `- ID : ${edited.id}`,
+          `- Nom : ${edited.nom}`,
+          `- POI principal : ${edited.poi_principal || "non défini"}`,
+          `- Type : ${edited.type}`,
+          `- Résumé : ${edited.resume || "(aucun)"}`,
+          "- Objectifs :",
+          ...edited.objectifs.map((o, i) => `  ${i + 1}. ${o}`),
+        ].join("\n");
+        document.getElementById("task-preview").textContent = preview;
+        alert("Task modifiée et sauvegardée.");
+      });
+
+    document
+      .getElementById("btn-delete-task")
+      .addEventListener("click", () => {
+        const selectedId =
+          document.getElementById("edit-select-task").value;
+        if (!selectedId) {
+          alert("Sélectionne une task à supprimer.");
+          return;
+        }
+        const t = TASKS.find((x) => x.id === selectedId);
+        if (!t) {
+          alert("Task introuvable.");
+          return;
+        }
+        if (
+          !confirm(
+            `Supprimer définitivement la task [${t.id}] ${t.nom} ?`
+          )
+        )
+          return;
+
+        TASKS = TASKS.filter((x) => x.id !== selectedId);
+        saveToStorage(STORAGE_KEY_TASKS, TASKS);
+        majSelectTasksGenerator();
+        majSelectTasksEditor();
+        viderFormTask();
+        alert("Task supprimée.");
+      });
+
+    document
+      .getElementById("btn-add-vendor")
+      .addEventListener("click", () => {
+        const input = document.getElementById("new-vendor-input");
+        const name = (input.value || "").trim();
+        if (!name) {
+          alert("Nom de donneur vide.");
+          return;
+        }
+        if (VENDORS.includes(name)) {
+          alert("Ce donneur existe déjà.");
+          return;
+        }
+        VENDORS.push(name);
+        saveVendors();
+        refreshVendorSelects();
+        majSelectTasksGenerator();
+        majSelectTasksEditor();
+        input.value = "";
+        alert("Donneur ajouté. Tu peux maintenant l'utiliser dans les tasks.");
+      });
+
+    document
+      .getElementById("poi-list-select")
+      .addEventListener("change", () => {
+        const id = document.getElementById("poi-list-select").value;
+        const p = DATA_POI.poi.find((x) => x.id === id);
+        if (!p) return;
+        document.getElementById("poi-id-input").value = p.id;
+        document.getElementById("poi-name-input").value = p.nom;
+        document.getElementById("poi-secteur-input").value = p.secteur;
+        document.getElementById("poi-type-input").value = p.type;
+      });
+
+    document
+      .getElementById("btn-add-poi")
+      .addEventListener("click", () => {
+        const id = document.getElementById("poi-id-input").value.trim();
+        const nom = document
+          .getElementById("poi-name-input")
+          .value.trim();
+        const secteur = document
+          .getElementById("poi-secteur-input")
+          .value.trim();
+        const type = document
+          .getElementById("poi-type-input")
+          .value.trim();
+        if (!id || !nom) {
+          alert("ID et nom du POI sont obligatoires.");
+          return;
+        }
+        const existingIdx = DATA_POI.poi.findIndex((p) => p.id === id);
+        const obj = {
+          id,
+          nom,
+          secteur: secteur || "?",
+          type: type || "POI",
+        };
+        if (existingIdx === -1) {
+          DATA_POI.poi.push(obj);
+        } else {
+          DATA_POI.poi[existingIdx] = obj;
+        }
+        saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
+        refreshPoiSelects();
+        refreshPoiLzEditorLists();
+        alert("POI ajouté / mis à jour.");
+      });
+
+    document
+      .getElementById("btn-del-poi")
+      .addEventListener("click", () => {
+        const id = document.getElementById("poi-list-select").value;
+        if (!id) {
+          alert("Sélectionne un POI à supprimer.");
+          return;
+        }
+        const p = DATA_POI.poi.find((x) => x.id === id);
+        if (!p) {
+          alert("POI introuvable.");
+          return;
+        }
+        if (!confirm(`Supprimer le POI [${p.id}] ${p.nom} ?`)) return;
+        DATA_POI.poi = DATA_POI.poi.filter((x) => x.id !== id);
+        saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
+        refreshPoiSelects();
+        refreshPoiLzEditorLists();
+        alert("POI supprimé.");
+      });
+
+    document
+      .getElementById("lz-list-select")
+      .addEventListener("change", () => {
+        const id = document.getElementById("lz-list-select").value;
+        const l = DATA_POI.lz.find((x) => x.id === id);
+        if (!l) return;
+        document.getElementById("lz-id-input").value = l.id;
+        document.getElementById("lz-name-input").value = l.nom;
+        document.getElementById("lz-secteur-input").value = l.secteur;
+        document.getElementById("lz-type-input").value = l.type;
+        document.getElementById("lz-poi-near-input").value =
+          l.poiId || "";
+      });
+
+    document
+      .getElementById("btn-add-lz")
+      .addEventListener("click", () => {
+        const id = document.getElementById("lz-id-input").value.trim();
+        const nom = document
+          .getElementById("lz-name-input")
+          .value.trim();
+        const secteur = document
+          .getElementById("lz-secteur-input")
+          .value.trim();
+        const type = document
+          .getElementById("lz-type-input")
+          .value.trim();
+        const poiId = document.getElementById("lz-poi-near-input").value;
+        if (!id || !nom) {
+          alert("ID et nom de la LZ sont obligatoires.");
+          return;
+        }
+        if (!poiId) {
+          alert(
+            "En mode strict, une LZ sans POI lié ne sera jamais utilisée."
+          );
+        }
+        const existingIdx = DATA_POI.lz.findIndex((l) => l.id === id);
+        const obj = {
+          id,
+          nom,
+          secteur: secteur || "?",
+          type: type || "LZ",
+          poiId: poiId || "",
+        };
+        if (existingIdx === -1) {
+          DATA_POI.lz.push(obj);
+        } else {
+          DATA_POI.lz[existingIdx] = obj;
+        }
+        saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
+        refreshPoiLzEditorLists();
+        alert("LZ ajoutée / mise à jour.");
+      });
+
+    document
+      .getElementById("btn-del-lz")
+      .addEventListener("click", () => {
+        const id = document.getElementById("lz-list-select").value;
+        if (!id) {
+          alert("Sélectionne une LZ à supprimer.");
+          return;
+        }
+        const l = DATA_POI.lz.find((x) => x.id === id);
+        if (!l) {
+          alert("LZ introuvable.");
+          return;
+        }
+        if (!confirm(`Supprimer la LZ [${l.id}] ${l.nom} ?`)) return;
+        DATA_POI.lz = DATA_POI.lz.filter((x) => x.id !== id);
+        saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
+        refreshPoiLzEditorLists();
+        alert("LZ supprimée.");
+      });
+
+    const lzManualContainer = document.getElementById("lz-manual-selects");
+    const lzInSelect = document.getElementById("lz-in-select");
+    const lzOutSelect = document.getElementById("lz-out-select");
+
+    function remplirLzManualSelects(poiId, lzIn, lzOut) {
+      const candidates = DATA_POI.lz.filter((l) => l.poiId === poiId);
+      lzInSelect.innerHTML = "";
+      lzOutSelect.innerHTML = "";
+
+      if (!candidates.length) {
+        const opt1 = document.createElement("option");
+        opt1.value = "";
+        opt1.textContent = "Aucune LZ liée à ce POI";
+        lzInSelect.appendChild(opt1);
+        const opt2 = opt1.cloneNode(true);
+        lzOutSelect.appendChild(opt2);
+        lzManualContainer.classList.remove("hidden");
+        return;
+      }
+
+      candidates.forEach((l) => {
+        const optIn = document.createElement("option");
+        optIn.value = l.id;
+        optIn.textContent = l.nom;
+        lzInSelect.appendChild(optIn);
+        const optOut = document.createElement("option");
+        optOut.value = l.id;
+        optOut.textContent = l.nom;
+        lzOutSelect.appendChild(optOut);
+      });
+
+      if (lzIn && lzIn.id) lzInSelect.value = lzIn.id;
+      if (lzOut && lzOut.id) lzOutSelect.value = lzOut.id;
+      lzManualContainer.classList.remove("hidden");
+    }
+
+    function remplacerLigne(text, prefix, newLine) {
+      const lines = text.split("\n");
+      let found = false;
+      const result = lines.map((l) => {
+        if (!found && l.startsWith(prefix)) {
+          found = true;
+          return newLine;
+        }
+        return l;
+      });
+      if (!found) result.push(newLine);
+      return result.join("\n");
+    }
+
+    lzInSelect.addEventListener("change", () => {
+      const id = lzInSelect.value;
+      const l = DATA_POI.lz.find((x) => x.id === id);
+      const name = l ? l.nom : "non définie";
+      const current = document.getElementById("mission-output")
+        .textContent;
+      const updated = remplacerLigne(
+        current,
+        "Insertion :",
+        `Insertion : ${name}`
+      );
+      document.getElementById("mission-output").textContent = updated;
+    });
+
+    lzOutSelect.addEventListener("change", () => {
+      const id = lzOutSelect.value;
+      const l = DATA_POI.lz.find((x) => x.id === id);
+      const name = l ? l.nom : "non définie";
+      const current = document.getElementById("mission-output")
+        .textContent;
+      const updated = remplacerLigne(
+        current,
+        "Exfiltration prévue :",
+        `Exfiltration prévue : ${name}`
+      );
+      document.getElementById("mission-output").textContent = updated;
+    });
+
+    let dernierContexte = null;
+
+    function genererMission(contexteForce) {
+      const mode = document.getElementById("mode-mission").value;
+      const typeMissionInput =
+        document.getElementById("type-mission").value;
+      const poiSelect = document.getElementById("poi-select").value;
+      const nbObjectifs =
+        parseInt(
+          document.getElementById("nb-objectifs").value,
+          10
+        ) || 0;
+      const heureInput = document.getElementById("heure").value;
+      const nbJoueurs =
+        parseInt(
+          document.getElementById("nb-joueurs").value,
+          10
+        ) || 4;
+      const risque = document.getElementById("risque").value;
+      const vendor = document.getElementById("vendor-task").value;
+      const taskId = document.getElementById("task-select").value;
+
+      const heure =
+        (contexteForce && contexteForce.heure) ||
+        (heureInput === "aleatoire"
+          ? randArray(TEMPLATES.heures)
+          : heureInput);
+
+      let poiPrincipal;
+      if (contexteForce && contexteForce.poiId) {
+        poiPrincipal = getPoiById(contexteForce.poiId);
+      } else if (!DATA_POI.poi.length) {
+        poiPrincipal = { id: "", nom: "Zone inconnue" };
+      } else {
+        poiPrincipal =
+          poiSelect === "aleatoire"
+            ? randArray(DATA_POI.poi)
+            : getPoiById(poiSelect);
+      }
+
+      let typeMission = "";
+      let resumeTask = "";
+      let objectifsTask = [];
+      let nomTask = "";
+      let donneurTask = "";
+      let taskChoisieId = null;
+
+      if (mode === "task") {
+        let candidates = TASKS.filter((t) => t.donneur === vendor);
+        if (contexteForce && contexteForce.taskId) {
+          const t = TASKS.find((x) => x.id === contexteForce.taskId);
+          if (t) candidates = [t];
+        } else if (taskId) {
+          const t = TASKS.find((x) => x.id === taskId);
+          if (t) candidates = [t];
+        }
+        if (candidates.length > 0) {
+          const t =
+            contexteForce && contexteForce.taskId
+              ? candidates[0]
+              : randArray(candidates);
+          typeMission = t.type || "Mission";
+          resumeTask = t.resume || "";
+          objectifsTask = t.objectifs || [];
+          nomTask = t.nom || "";
+          donneurTask = t.donneur || vendor;
+          taskChoisieId = t.id;
+          if (!contexteForce && t.poi_principal) {
+            const poiFromTask = getPoiById(t.poi_principal);
+            if (poiFromTask) poiPrincipal = poiFromTask;
+          }
+        } else {
+          typeMission = "Mission libre";
+        }
+      } else {
+        typeMission =
+          (contexteForce && contexteForce.typeMission) ||
+          (typeMissionInput === "aleatoire"
+            ? randArray(TEMPLATES.typesMission)
+            : typeMissionInput);
+      }
+
+      let lzIn, lzOut;
+      if (
+        contexteForce &&
+        contexteForce.lzInId &&
+        contexteForce.lzOutId
+      ) {
+        lzIn = DATA_POI.lz.find((l) => l.id === contexteForce.lzInId) || null;
+        lzOut =
+          DATA_POI.lz.find((l) => l.id === contexteForce.lzOutId) || null;
+      } else {
+        const choixLZ = choisirLZPourPoiStrict(poiPrincipal.id);
+        lzIn = choixLZ.lzIn;
+        lzOut = choixLZ.lzOut;
+      }
+
+      let heurePhrase = "";
+      if (heure === "Nuit") {
+        heurePhrase = "de nuit";
+      } else if (heure === "Jour") {
+        heurePhrase = "de jour";
+      } else if (heure === "Aube") {
+        heurePhrase = "à l'aube";
+      } else if (heure === "Crépuscule") {
+        heurePhrase = "au crépuscule";
+      } else {
+        heurePhrase = `de ${String(heure).toLowerCase()}`;
+      }
+
+      dernierContexte = {
+        mode,
+        typeMission,
+        poiId: poiPrincipal.id,
+        nbObjectifs,
+        heure,
+        nbJoueurs,
+        risque,
+        vendor,
+        taskId: taskChoisieId || taskId || "",
+        lzInId: lzIn ? lzIn.id : "",
+        lzOutId: lzOut ? lzOut.id : "",
+      };
+
+      let out = "";
+
+      out += "SITUATION\n";
+      out += randArray(TEMPLATES.briefingIntro) + "\n";
+      if (mode === "task" && nomTask) {
+        out += `Cette opération s'articule autour de la task "${nomTask}" confiée par ${donneurTask}.\n`;
+      }
+      out += `La zone principale d'intérêt est le secteur de ${poiPrincipal.nom}.\n\n`;
+
+      out += "MISSION\n";
+      out += `Votre équipe de ${nbJoueurs} opérateur(s) sera insérée ${heurePhrase} par hélicoptère`;
+      out += lzIn && lzIn.nom ? ` sur ${lzIn.nom}` : "";
+      out += `, dans un contexte de risque ${risque}.\n`;
+      out += `Votre objectif principal est de mener une mission de type ${typeMission} autour de ${poiPrincipal.nom}.\n`;
+      if (mode === "task" && resumeTask) {
+        out += `Résumé de la task : ${resumeTask}\n`;
+      }
+      out += "\n";
+
+      out += "EXÉCUTION\n";
+
+      let compteur = 0;
+      if (mode === "task" && objectifsTask.length > 0) {
+        objectifsTask.forEach((o) => {
+          compteur += 1;
+          out += `${compteur}. ${o}\n`;
+        });
+        if (nbObjectifs > 0) {
+          out += "\nObjectifs complémentaires (RP) générés :\n";
+        } else {
+          out += "\n";
+        }
+      }
+
+      if (nbObjectifs > 0) {
+        const dejaPrisTemplates = new Set();
+        for (let i = 0; i < nbObjectifs; i++) {
+          const objTexte = genererObjectif(
+            typeMission,
+            poiPrincipal,
+            dejaPrisTemplates
+          );
+          compteur += 1;
+          out += `${compteur}. ${objTexte}\n`;
+        }
+      }
+
+      out += `\nInsertion : ${
+        lzIn && lzIn.nom ? lzIn.nom : "non définie"
+      }\n`;
+      out += `Exfiltration prévue : ${
+        lzOut && lzOut.nom ? lzOut.nom : "non définie"
+      }\n`;
+      out +=
+        "Maintenez la cohésion de l'escouade et adaptez-vous à la résistance rencontrée.\n\n";
+
+      let cond = randArray(TEMPLATES.conditionsVictoire);
+      const nCond = Math.floor(Math.random() * 3) + 2;
+      cond = cond
+        .replace(
+          "{LZ_EXFIL}",
+          lzOut && lzOut.nom ? lzOut.nom : "la zone d'exfiltration"
+        )
+        .replace("{N}", nCond);
+
+      out += "CONDITIONS DE VICTOIRE\n";
+      out += "- " + cond + "\n";
+
+      out += "\nNOTE RP\n";
+      out +=
+        "Utilise une carte interactive (GZW Tac Map, MapGenie, etc.) pour placer précisément le POI choisi et les points clés de la task.\n";
+
+      remplirLzManualSelects(poiPrincipal.id, lzIn, lzOut);
+
+      return out;
+    }
+
+    document
+      .getElementById("btn-generate")
+      .addEventListener("click", () => {
+        const missionText = genererMission(null);
+        document.getElementById("mission-output").textContent =
+          missionText;
+      });
+
+    document
+      .getElementById("btn-regenerate")
+      .addEventListener("click", () => {
+        if (!dernierContexte) {
+          alert(
+            "Commence par générer une opération avant de régénérer le briefing."
+          );
+          return;
+        }
+        const missionText = genererMission(dernierContexte);
+        document.getElementById("mission-output").textContent =
+          missionText;
+      });
+
+    document.getElementById("btn-copy").addEventListener("click", async () => {
+      const text = document.getElementById("mission-output").textContent;
+      if (!text || text.startsWith("Clique sur")) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("Briefing copié dans le presse-papiers.");
+      } catch {
+        alert(
+          "Impossible de copier automatiquement. Copie manuelle nécessaire."
+        );
+      }
+    });
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const tab = btn.getAttribute("data-tab");
+        document
+          .getElementById("tab-generator")
+          .classList.toggle("hidden", tab !== "generator");
+        document
+          .getElementById("tab-editor-tasks")
+          .classList.toggle("hidden", tab !== "editor-tasks");
+        document
+          .getElementById("tab-editor-poi-lz")
+          .classList.toggle("hidden", tab !== "editor-poi-lz");
+        document
+          .getElementById("tab-import-export")
+          .classList.toggle("hidden", tab !== "import-export");
+      });
+    });
+
+    (function setDefaultTab() {
+      const btnGen = document.querySelector('.tab-btn[data-tab="generator"]');
+      const btnTasks = document.querySelector(
+        '.tab-btn[data-tab="editor-tasks"]'
+      );
+      const btnPoiLz = document.querySelector(
+        '.tab-btn[data-tab="editor-poi-lz"]'
+      );
+      const btnImpExp = document.querySelector(
+        '.tab-btn[data-tab="import-export"]'
+      );
+      const tabGen = document.getElementById("tab-generator");
+      const tabTasks = document.getElementById("tab-editor-tasks");
+      const tabPoiLz = document.getElementById("tab-editor-poi-lz");
+      const tabImpExp = document.getElementById("tab-import-export");
+
+      if (btnGen) btnGen.classList.add("active");
+      if (btnTasks) btnTasks.classList.remove("active");
+      if (btnPoiLz) btnPoiLz.classList.remove("active");
+      if (btnImpExp) btnImpExp.classList.remove("active");
+
+      if (tabGen) tabGen.classList.remove("hidden");
+      if (tabTasks) tabTasks.classList.add("hidden");
+      if (tabPoiLz) tabPoiLz.classList.add("hidden");
+      if (tabImpExp) tabImpExp.classList.add("hidden");
+    })();
+
+    const inputVersionGZW = document.getElementById("version-gzw");
+    const inputVersionGen = document.getElementById("version-gen");
+    inputVersionGZW.value = META.versionGZW || "0.10";
+    inputVersionGen.value = META.versionGen || "0.17";
+
+    function saveMeta() {
+      META.versionGZW = inputVersionGZW.value.trim();
+      META.versionGen = inputVersionGen.value.trim();
+      saveToStorage(STORAGE_KEY_META, META);
+    }
+
+    inputVersionGZW.addEventListener("change", saveMeta);
+    inputVersionGen.addEventListener("change", saveMeta);
+
+    function downloadToFile(content, filename, contentType) {
+      const a = document.createElement("a");
+      const file = new Blob([content], { type: contentType });
+      a.href = URL.createObjectURL(file);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    document
+      .getElementById("btn-save-file")
+      .addEventListener("click", () => {
+        const vGZW = document
+          .getElementById("version-gzw")
+          .value.trim();
+        const vGen = document
+          .getElementById("version-gen")
+          .value.trim();
+
+        let html = document.documentElement.outerHTML;
+
+        html = html.replace(
+          /id="version-gzw"[^>]*value="[^"]*"/,
+          `id="version-gzw" value="${vGZW}"`
+        );
+        html = html.replace(
+          /id="version-gen"[^>]*value="[^"]*"/,
+          `id="version-gen" value="${vGen}"`
+        );
+
+        const nomFichier = `gzw-generator-V${vGen || "custom"}.html`;
+        downloadToFile(html, nomFichier, "text/html");
+      });
+
+    refreshVendorSelects();
+    refreshPoiSelects();
+    refreshPoiLzEditorLists();
+    majSelectTasksGenerator();
+    majSelectTasksEditor();
+
+    (function animateRadar() {
+      const sweep = document.getElementById("radar-sweep");
+      if (!sweep) return;
+      let angle = 0;
+      setInterval(() => {
+        angle = (angle + 3) % 360;
+        const rad = (angle * Math.PI) / 180;
+        const cx = 50;
+        const cy = 50;
+        const r = 47;
+        const x2 = cx + r * Math.sin(rad);
+        const y2 = cy - r * Math.cos(rad);
+        sweep.setAttribute("x2", x2.toString());
+        sweep.setAttribute("y2", y2.toString());
+      }, 40);
+    })();
+
+    // EXPORT / IMPORT HELPERS
+    function exportJson(obj, filename) {
+      const dataStr = JSON.stringify(obj, null, 2);
+      downloadToFile(dataStr, filename, "application/json");
+    }
+
+    function importJsonFromTextarea(textareaId, handler) {
+      const raw = document.getElementById(textareaId).value.trim();
+      if (!raw) {
+        alert("Zone de texte vide.");
+        return;
+      }
+      try {
+        const data = JSON.parse(raw);
+        handler(data);
+      } catch (e) {
+        alert("JSON invalide : " + e.message);
+      }
+    }
+
+    function importJsonFromFile(inputId, handler) {
+      const input = document.getElementById(inputId);
+      if (!input.files || !input.files[0]) {
+        alert("Aucun fichier sélectionné.");
+        return;
+      }
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          handler(data);
+        } catch (err) {
+          alert("JSON invalide : " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // EXPORT / IMPORT VENDORS
+    document
+      .getElementById("btn-export-vendors")
+      .addEventListener("click", () => {
+        exportJson(VENDORS, "gzw_vendors_export.json");
+      });
+
+    document
+      .getElementById("btn-import-vendors")
+      .addEventListener("click", () => {
+        importJsonFromTextarea("json-vendors-input", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau de chaînes.");
+            return;
+          }
+          VENDORS = data
+            .map((v) => String(v).trim())
+            .filter((v) => v.length > 0);
+          if (!VENDORS.length) {
+            alert("Liste de donneurs vide après import.");
+            return;
+          }
+          saveVendors();
+          refreshVendorSelects();
+          majSelectTasksGenerator();
+          majSelectTasksEditor();
+          alert("Donneurs importés et appliqués.");
+        });
+      });
+
+    document
+      .getElementById("btn-import-vendors-file")
+      .addEventListener("click", () => {
+        importJsonFromFile("file-vendors", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau de chaînes.");
+            return;
+          }
+          VENDORS = data
+            .map((v) => String(v).trim())
+            .filter((v) => v.length > 0);
+          if (!VENDORS.length) {
+            alert("Liste de donneurs vide après import.");
+            return;
+          }
+          saveVendors();
+          refreshVendorSelects();
+          majSelectTasksGenerator();
+          majSelectTasksEditor();
+          alert("Donneurs importés depuis le fichier.");
+        });
+      });
+
+    // EXPORT / IMPORT TASKS
+    document
+      .getElementById("btn-export-tasks")
+      .addEventListener("click", () => {
+        exportJson(TASKS, "gzw_tasks_export.json");
+      });
+
+    document
+      .getElementById("btn-import-tasks")
+      .addEventListener("click", () => {
+        importJsonFromTextarea("json-tasks-input", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau d'objets task.");
+            return;
+          }
+          TASKS = data;
+          saveToStorage(STORAGE_KEY_TASKS, TASKS);
+          majSelectTasksGenerator();
+          majSelectTasksEditor();
+          alert("Tasks importées et appliquées.");
+        });
+      });
+
+    document
+      .getElementById("btn-import-tasks-file")
+      .addEventListener("click", () => {
+        importJsonFromFile("file-tasks", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau d'objets task.");
+            return;
+          }
+          TASKS = data;
+          saveToStorage(STORAGE_KEY_TASKS, TASKS);
+          majSelectTasksGenerator();
+          majSelectTasksEditor();
+          alert("Tasks importées depuis le fichier.");
+        });
+      });
+
+    // EXPORT / IMPORT POI
+    document
+      .getElementById("btn-export-poi")
+      .addEventListener("click", () => {
+        exportJson(DATA_POI.poi, "gzw_poi_export.json");
+      });
+
+    document
+      .getElementById("btn-import-poi")
+      .addEventListener("click", () => {
+        importJsonFromTextarea("json-poi-input", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau d'objets POI.");
+            return;
+          }
+          DATA_POI.poi = data;
+          saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
+          refreshPoiSelects();
+          refreshPoiLzEditorLists();
+          alert("POI importés et appliqués.");
+        });
+      });
+
+    document
+      .getElementById("btn-import-poi-file")
+      .addEventListener("click", () => {
+        importJsonFromFile("file-poi", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau d'objets POI.");
+            return;
+          }
+          DATA_POI.poi = data;
+          saveToStorage(STORAGE_KEY_POI, DATA_POI.poi);
+          refreshPoiSelects();
+          refreshPoiLzEditorLists();
+          alert("POI importés depuis le fichier.");
+        });
+      });
+
+    // EXPORT / IMPORT LZ
+    document
+      .getElementById("btn-export-lz")
+      .addEventListener("click", () => {
+        exportJson(DATA_POI.lz, "gzw_lz_export.json");
+      });
+
+    document
+      .getElementById("btn-import-lz")
+      .addEventListener("click", () => {
+        importJsonFromTextarea("json-lz-input", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau d'objets LZ.");
+            return;
+          }
+          DATA_POI.lz = data;
+          saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
+          refreshPoiLzEditorLists();
+          alert("LZ importées et appliquées.");
+        });
+      });
+
+    document
+      .getElementById("btn-import-lz-file")
+      .addEventListener("click", () => {
+        importJsonFromFile("file-lz", (data) => {
+          if (!Array.isArray(data)) {
+            alert("Le JSON doit être un tableau d'objets LZ.");
+            return;
+          }
+          DATA_POI.lz = data;
+          saveToStorage(STORAGE_KEY_LZ, DATA_POI.lz);
+          refreshPoiLzEditorLists();
+          alert("LZ importées depuis le fichier.");
+        });
+      });
+  </script>
+</body>
+</html>
