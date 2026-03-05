@@ -1412,14 +1412,15 @@
       ],
       objectifs: [
         "Reconnaître discrètement le secteur de {POI} et confirmer la présence d'hostiles.",
-        "Fouiller au moins {N} bâtiments marqués à {POI} sans vous faire neutraliser.",
+        "Fouiller {N} bâtiments marqués à {POI} sans vous faire neutraliser.",
         "Localiser et éliminer une cible HVT dans la zone de {POI}.",
         "Récupérer un objet sensible et non identifié à {POI} et l'exfiltrer.",
         "Saboter les capacités logistiques ennemies dans le secteur de {POI}.",
+		"Détruire les capacités logistiques ennemies dans le secteur de {POI}.",
       ],
       conditionsVictoire: [
-        "Au moins un opérateur doit extraire vivant via {LZ_EXFIL}.",
-        "Ramener l’objet clé en vie à la base.",
+        "Au moins un opérateur doit s'extraire vivant via {LZ_EXFIL}.",
+        "Ramener l’objet clé en parfait état à la base.",
         "Éliminer au moins {N} cibles confirmées dans la zone d'opération.",
         "Aucun civil ne doit être touché durant l’opération.",
       ],
@@ -2365,7 +2366,7 @@
         lzOut && lzOut.nom ? lzOut.nom : "non définie"
       }\n`;
       out +=
-        "Maintenez la cohésion de l'escouade et adaptez-vous à la résistance rencontrée.\n\n";
+        "Adaptez-vous à la résistance rencontrée.\n\n";
 
       let cond = randArray(TEMPLATES.conditionsVictoire);
       const nCond = Math.floor(Math.random() * 3) + 2;
